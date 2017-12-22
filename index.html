@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/spreadsheet-builder.css?v=1.0.2" />
+<link rel="stylesheet" href="css/spreadsheet-builder.css?v=1.0.3" />
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -565,6 +565,7 @@ $(addBlockSwitches);
 </li>
 <li><a href="#_changelog">Changelog</a>
 <ul class="sectlevel1">
+<li><a href="#_1_0_3">1.0.3</a></li>
 <li><a href="#_1_0_2">1.0.2</a></li>
 <li><a href="#_1_0_1">1.0.1</a></li>
 <li><a href="#_1_0">1.0</a>
@@ -622,9 +623,9 @@ repositories {
 }
 
 dependencies {
-    compile 'builders.dsl:spreadsheet-builder-poi:1.0.2'
+    compile 'builders.dsl:spreadsheet-builder-poi:1.0.3'
     // for groovy support
-    compile 'builders.dsl:spreadsheet-builder-groovy:1.0.2'
+    compile 'builders.dsl:spreadsheet-builder-groovy:1.0.3'
 }</code></pre>
 </div>
 </div>
@@ -634,7 +635,7 @@ dependencies {
 <pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;builders.dsl&lt;/groupId&gt;
   &lt;artifactId&gt;spreadsheet-builder-poi&lt;/artifactId&gt;
-  &lt;version&gt;1.0.2&lt;/version&gt;
+  &lt;version&gt;1.0.3&lt;/version&gt;
   &lt;type&gt;pom&lt;/type&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
@@ -1662,7 +1663,7 @@ with sheets and than refer to it from cell or row.</p>
         color black
     }
     font {
-        make bold
+        style bold
     }
     background whiteSmoke
 }
@@ -1688,7 +1689,7 @@ sheet('Sample') {
             value "Groovy Spreadsheet Builder"
             style {
                 font {
-                    make bold
+                    style bold
                 }
             }
         }
@@ -1706,7 +1707,7 @@ sheet('Sample') {
         b.color(black);
     });
     st.font(f -&gt; {
-        f.make(bold);
+        f.style(bold);
     });
     st.background(whiteSmoke);
 });
@@ -1733,7 +1734,7 @@ w.sheet("Sample", s -&gt; {
             c.value("Groovy Spreadsheet Builder");
             c.style(st -&gt; {
                 st.font(f -&gt; {
-                    f.make(bold);
+                    f.style(bold);
                 });
             });
         });
@@ -1935,7 +1936,7 @@ Colors can be defined as hexadecimal string as well.</p>
         value 'Bold Red 22'
         style {
             font {
-                make bold
+                style bold
                 color red
                 size 22
             }
@@ -1946,7 +1947,7 @@ Colors can be defined as hexadecimal string as well.</p>
         value 'Underline Courier New'
         style {
             font {
-                make underline
+                style underline
                 name 'Courier New'
             }
         }
@@ -1956,7 +1957,7 @@ Colors can be defined as hexadecimal string as well.</p>
         value 'Italic'
         style {
             font {
-                make italic
+                style italic
             }
         }
     }
@@ -1965,7 +1966,7 @@ Colors can be defined as hexadecimal string as well.</p>
         value 'Strikeout'
         style {
             font {
-                make strikeout
+                style strikeout
             }
         }
     }
@@ -1981,7 +1982,7 @@ Colors can be defined as hexadecimal string as well.</p>
         c.value("Bold Red 22");
         c.style(st -&gt; {
             st.font(f -&gt; {
-                f.make(bold);
+                f.stylestyle(bold);
                 f.color(red);
                 f.size(22);
             });
@@ -1992,7 +1993,7 @@ Colors can be defined as hexadecimal string as well.</p>
         c.value("Underline Courier New");
         c.style(st -&gt; {
             st.font(f -&gt; {
-                f.make(underline);
+                f.stylestyle(underline);
                 f.name("Courier New");
             });
         });
@@ -2002,7 +2003,7 @@ Colors can be defined as hexadecimal string as well.</p>
         c.value("Italic");
         c.style(st -&gt; {
             st.font(f -&gt; {
-                f.make(italic);
+                f.stylestyle(italic);
             });
         });
     });
@@ -2011,7 +2012,7 @@ Colors can be defined as hexadecimal string as well.</p>
         c.value("Strikeout");
         c.style(st -&gt; {
             st.font(f -&gt; {
-                f.make(strikeout);
+                f.style(strikeout);
             });
         });
     });
@@ -2044,12 +2045,12 @@ definition is the same as <a href="#_fonts">above</a>.</p>
     }
     text ' '
     text 'Riding', {
-        make italic
+        style italic
         size 18
     }
     text ' '
     text 'Hood', {
-        make bold
+        style bold
         size 22
     }
 
@@ -2068,12 +2069,12 @@ definition is the same as <a href="#_fonts">above</a>.</p>
     });
     c.text(" ");
     c.text("Riding", f -&gt; {
-        f.make(italic);
+        f.style(italic);
         f.size(18);
     });
     c.text(" ");;
     c.text("Hood", f -&gt; {
-        f.make(bold);
+        f.style(bold);
         f.size(22);
     });
 });</code></pre>
@@ -3299,6 +3300,14 @@ except text wrapping, rich texts and alignment options. All font options are sup
 </div>
 <h1 id="_changelog" class="sect0">Changelog</h1>
 <div class="sect1">
+<h2 id="_1_0_3">1.0.3</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Fixed problem with automatic width of column with long text and automatic filter <a href="https://github.com/dsl-builders/spreadsheet/issues/2">#5</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_1_0_2">1.0.2</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -3478,7 +3487,7 @@ to distinguish them from the ones returned from queries.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-11-24 11:44:40 +01:00
+Last updated 2017-12-22 09:16:53 CET
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
