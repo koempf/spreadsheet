@@ -95,8 +95,20 @@ sheets:
 
 ----
 
+Sucessfull response will contain single property URL with the link to the generated file which will be available for download
+within next one hour:
+
+[source,json]
+----
+{
+  "url": "https://tmp-sheet-rest.s3-eu-west-1.amazonaws.com/a76a4b41-65cb-443c-a62f-4c9b76dc3431.xlsx?X-Amz-Security-Token=FQoGZXIvYXdzED4aDC4QLxSXsr8IEW5yjCLjAds6TePE%2BCYMNWHCqEAc7bDYHUzIwOJSne3DK%2B8QWPsFH3VH6mW%2FVOYcW0gS0FEP0Z1OzZj3AABdZlvnm6NBR1BNkUxhTx5Qimn9dcO4Sx2VQAlY0kSQvkjwZdKS%2FG3fsjUN9S%2Bf9ScxSYFMWYlG27dTfNEM93yTl8z7zDDe854L3BcQteGTXfdGwHIRw5TTP3BHAm14sJ2D5C%2FCO5u4IPaDr3KTBrolfD4siKol3DgUO4CFEVZAn6wgnrga4WhVSx3kCVLodam45aYFhnQrlFtLbm3ASiGwECiOtlmfupH0cZ%2BQKLjdz94F&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181027T051510Z&X-Amz-SignedHeaders=host&X-Amz-Expires=153889&X-Amz-Credential=ASIAUDGJA2QCG2HVGRDX%2F20181027%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=decdaa12e0cc261e0c0ebe74464a44b387b5efeab79228aeb33900c76bc15ec3"
+}
+
+----
+
+
 Feel free to use provided API Key `jYXipZWOlU18gqyogkRSG4GgKdymodDY4Hj5BkfO` for testing or mailto:vladimir+sheet.rest@orany.cz?subject=Sheet.REST+API+Key&body=Hello,+I+would+like+an+dedicated+access+for+Sheet.REST+because+...[ask for a dedicated one].
-Use the JSON and YAML sections of the examples for syntax details.
+Use the JSON and YAML sections of the examples for syntax details. Sheet.REST is currently in public beta.
 
 ====
 
@@ -168,6 +180,62 @@ public class SpreadsheetWriter {
 <3> Create new row
 <4> Create new cell
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells" : [
+            {
+              "value" : "A"
+            },
+            {
+              "value" : "B"
+            },
+            {
+              "value" : "C"
+            }
+          ]
+        },
+        {
+          "cells" : [
+            {
+              "value" : 1
+            },
+            {
+              "value" : 2
+            },
+            {
+              "value" : 3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,yaml,indent=0,role="secondary"]
+.YML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: A
+    - value: B
+    - value: C
+  - cells:
+    - value: 1
+    - value: 2
+    - value: 3
+----
+
 _Result_
 
 image::basic_sample.png[]
@@ -208,6 +276,50 @@ w.sheet("Sample", s -> {
 
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "number": 5,
+          "cells": [
+            {
+              "value": "Line 5"
+            }
+          ]
+        },
+        {
+        },
+        {
+          "cells": [
+            {
+              "value": "Line 7"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,yaml,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - number: 5
+  cells:
+  - value: Line 5
+  - cells: []
+  - cells:
+    - value: Line 7
+----
 
 _Result_
 
