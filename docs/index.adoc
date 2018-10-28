@@ -220,8 +220,8 @@ public class SpreadsheetWriter {
 }
 ----
 
-[source,yaml,indent=0,role="secondary"]
-.YML
+[source,indent=0,role="secondary"]
+.YAML
 ----
 sheets:
 - name: Sample
@@ -307,15 +307,15 @@ w.sheet("Sample", s -> {
 }
 ----
 
-[source,yaml,indent=0,role="secondary"]
+[source,indent=0,role="secondary"]
 .YAML
 ----
 sheets:
 - name: Sample
   rows:
   - number: 5
-  cells:
-  - value: Line 5
+    cells:
+    - value: Line 5
   - cells: []
   - cells:
     - value: Line 7
@@ -460,6 +460,98 @@ w.sheet("Sample", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "freeze": {
+        "row": 1,
+        "column": 1
+      },
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "-"
+            },
+            {
+              "value": "A"
+            },
+            {
+              "value": "B"
+            },
+            {
+              "value": "C"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "Row 1"
+            },
+            {
+              "value": 10
+            },
+            {
+              "value": 11
+            },
+            {
+              "value": 12
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "Row 2"
+            },
+            {
+              "value": 20
+            },
+            {
+              "value": 21
+            },
+            {
+              "value": 22
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  freeze:
+    row: 1
+    column: 1
+  rows:
+  - cells:
+    - value: '-'
+    - value: A
+    - value: B
+    - value: C
+  - cells:
+    - value: Row 1
+    - value: 10
+    - value: 11
+    - value: 12
+  - cells:
+    - value: Row 2
+    - value: 20
+    - value: 21
+    - value: 22
+----
+
 _Result_
 
 
@@ -507,6 +599,39 @@ w.sheet("Password Protected", s -> {
         r.cell("Protected by Password");
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Password Protected",
+      "password": "p4$$w0rd",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Procted by Password"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Password Protected
+  password: p4$$w0rd
+  rows:
+  - cells:
+    - value: Procted by Password
 ----
 
 _Result_
