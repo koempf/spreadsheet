@@ -38,8 +38,7 @@ dependencies {
 </dependency>
 ----
 
-[TIP]
-====
+= REST API
 New REST API available at `https://api.sheet.rest/v1`:
 
 [source,indent=0,role="primary"]
@@ -101,7 +100,7 @@ within next one hour:
 [source,json]
 ----
 {
-  "url": "https://tmp-sheet-rest.s3-eu-west-1.amazonaws.com/a76a4b41-65cb-443c-a62f-4c9b76dc3431.xlsx?X-Amz-Security-Token=FQoGZXIvYXdzED4aDC4QLxSXsr8IEW5yjCLjAds6TePE%2BCYMNWHCqEAc7bDYHUzIwOJSne3DK%2B8QWPsFH3VH6mW%2FVOYcW0gS0FEP0Z1OzZj3AABdZlvnm6NBR1BNkUxhTx5Qimn9dcO4Sx2VQAlY0kSQvkjwZdKS%2FG3fsjUN9S%2Bf9ScxSYFMWYlG27dTfNEM93yTl8z7zDDe854L3BcQteGTXfdGwHIRw5TTP3BHAm14sJ2D5C%2FCO5u4IPaDr3KTBrolfD4siKol3DgUO4CFEVZAn6wgnrga4WhVSx3kCVLodam45aYFhnQrlFtLbm3ASiGwECiOtlmfupH0cZ%2BQKLjdz94F&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20181027T051510Z&X-Amz-SignedHeaders=host&X-Amz-Expires=153889&X-Amz-Credential=ASIAUDGJA2QCG2HVGRDX%2F20181027%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Signature=decdaa12e0cc261e0c0ebe74464a44b387b5efeab79228aeb33900c76bc15ec3"
+  "url": "<download url>"
 }
 
 ----
@@ -109,8 +108,6 @@ within next one hour:
 
 Feel free to use provided API Key `jYXipZWOlU18gqyogkRSG4GgKdymodDY4Hj5BkfO` for testing or mailto:vladimir+sheet.rest@orany.cz?subject=Sheet.REST+API+Key&body=Hello,+I+would+like+an+dedicated+access+for+Sheet.REST+because+...[ask for a dedicated one].
 Use the JSON and YAML sections of the examples for syntax details. Sheet.REST is currently in public beta.
-
-====
 
 = Writing Spreadsheets
 
@@ -817,7 +814,7 @@ sheet('Custom Page') {
         orientation landscape
     }
     row {
-        cell 'A5 Landcapse'
+        cell 'A5 Landscape'
     }
 }
 ----
@@ -832,7 +829,7 @@ w.sheet("Custom Page", s -> {
         p.orientation(landscape);
     });
     s.row(r -> {
-        r.cell("A5 Landcapse");
+        r.cell("A5 Landscape");
     });
 });
 ----
@@ -855,7 +852,7 @@ w.sheet("Custom Page", s -> {
         {
           "cells": [
             {
-              "value": "A5 Landcapse"
+              "value": "A5 Landscape"
             }
           ]
         }
@@ -877,7 +874,7 @@ sheets:
     orientation: landscape
   rows:
   - cells:
-    - value: A5 Landcapse
+    - value: A5 Landscape
 ----
 
 == Cells
@@ -2011,6 +2008,89 @@ w.sheet("Sample", s -> {
  });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Top Left",
+              "width": 20,
+              "height": 50,
+              "styles": [
+                {
+                  "align": {
+                    "vertical": "top",
+                    "horizontal": "left"
+                  }
+                }
+              ]
+            },
+            {
+              "value": "Top Center",
+              "width": 20,
+              "styles": [
+                {
+                  "align": {
+                    "vertical": "top",
+                    "horizontal": "center"
+                  }
+                }
+              ]
+            },
+            {
+              "value": "Top Right",
+              "width": 20,
+              "styles": [
+                {
+                  "align": {
+                    "vertical": "top",
+                    "horizontal": "right"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+  - name: Sample
+    rows:
+    - cells:
+      - value: Top Left
+        width: 20
+        height: 50
+        styles:
+        - align:
+            vertical: top
+            horizontal: left
+      - value: Top Center
+        width: 20
+        styles:
+        - align:
+            vertical: top
+            horizontal: center
+      - value: Top Right
+        width: 20
+        styles:
+        - align:
+            vertical: top
+            horizontal: right
+----
+
 _Result_
 
 image:alignment.png[]
@@ -2028,7 +2108,7 @@ cell {
     style {
         background '#FF8C00' // darkOrange
         foreground brown
-        fill square
+        fill squares
     }
 }
 ----
@@ -2040,9 +2120,49 @@ r.cell(c -> {
     c.style(st -> {
         st.background("#FF8C00"); // darkOrange
         st.foreground(brown);
-        st.fill(square);
+        st.fill(squares);
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "styles": [
+                {
+                  "background": "darkOrange",
+                  "foreground": "brown",
+                  "fill": "squares"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+  - name: Sample
+    rows:
+    - cells:
+      - styles:
+        - background: darkOrange
+          foreground: brown
+          fill: squares
 ----
 
 ==== Available predefined colors
@@ -2082,6 +2202,54 @@ r.cell(c -> {
         });
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "styles": [
+                {
+                  "borders": [
+                    {
+                      "side": [
+                        "top",
+                        "bottom"
+                      ],
+                      "style": "thin",
+                      "color": "gray"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+  - name: Sample
+    rows:
+    - cells:
+      - styles:
+        - borders:
+          - side: [top, bottom]
+            style: thin
+            color: gray
 ----
 
 ==== Available border styles
@@ -2185,6 +2353,103 @@ s.row(r -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Fonts",
+      "rows": [
+        {
+          "cells": [
+            {
+              "width": "auto",
+              "value": "Bold Red 22",
+              "styles": [
+                {
+                  "font": {
+                    "style": "bold",
+                    "color": "red",
+                    "size": 22
+                  }
+                }
+              ]
+            },
+            {
+              "width": "auto",
+              "value": "Underline Courier New",
+              "styles": [
+                {
+                  "font": {
+                    "style": "underline",
+                    "name": "Courier New"
+                  }
+                }
+              ]
+            },
+            {
+              "width": "auto",
+              "value": "Italic",
+              "styles": [
+                {
+                  "font": {
+                    "style": "italic"
+                  }
+                }
+              ]
+            },
+            {
+              "width": "auto",
+              "value": "Strikeout",
+              "styles": [
+                {
+                  "font": {
+                    "style": "strikeout"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Fonts
+  rows:
+  - cells:
+    - width: auto
+      value: Bold Red 22
+      styles:
+      - font:
+          style: bold
+          color: red
+          size: 22
+    - width: auto
+      value: Underline Courier New
+      styles:
+      - font:
+          style: underline
+          name: Courier New
+    - width: auto
+      value: Italic
+      styles:
+      - font:
+          style: italic
+    - width: auto
+      value: Strikeout
+      styles:
+      - font:
+          style: strikeout
+----
+
 _Result_
 
 image:fonts.png[]
@@ -2242,6 +2507,80 @@ r.cell(c -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Rich Text",
+      "rows": [
+        {
+          "cells": [
+            {
+              "text": [
+                "Little",
+                " ",
+                {
+                  "content": "Red",
+                  "font": {
+                    "color": "red",
+                    "size": 22,
+                    "name": "Times New Roman"
+                  }
+                },
+                " ",
+                {
+                  "content": "Riding",
+                  "font": {
+                    "style": "italic",
+                    "size": 18
+                  }
+                },
+                " ",
+                {
+                  "content": "Hood",
+                  "font": {
+                    "style": "bold",
+                    "size": 22
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Rich Text
+  rows:
+  - cells:
+    - text:
+      - Little
+      - " "
+      - content: Red
+        font:
+          color: red
+          size: 22
+          name: Times New Roman
+      - " "
+      - content: Riding
+        font:
+          style: italic
+          size: 18
+      - " "
+      - content: Hood
+        font:
+          style: bold
+          size: 22
+----
 
 _Result_
 
@@ -2281,6 +2620,44 @@ r.cell(c -> {
         st.format("dd/mm/yy");
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Date Format",
+      "rows": [
+        {
+          "cells": [
+            {
+              "formula": "NOW()",
+              "styles": [
+                {
+                  "format": "dd/mm/yy"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Date Format
+  rows:
+  - cells:
+    - formula: NOW()
+      styles:
+      - format: dd/mm/yy
 ----
 
 _Each of the formats can contain up to four parts separated by semicolon: `<POSITIVE>;<NEGATIVE>;<ZERO>;<TEXT>`.
@@ -2480,6 +2857,140 @@ w.sheet("Sample", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Date Format",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 0
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "x",
+              "styles": [
+                {
+                  "indent": 6
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Date Format
+  rows:
+  - cells:
+    - value: x
+      styles:
+      - indent: 0
+  - cells:
+    - value: x
+      styles:
+      - indent: 1
+  - cells:
+    - value: x
+      styles:
+      - indent: 2
+  - cells:
+    - value: x
+      styles:
+      - indent: 3
+  - cells:
+    - value: x
+      styles:
+      - indent: 4
+  - cells:
+    - value: x
+      styles:
+      - indent: 5
+  - cells:
+    - value: x
+      styles:
+      - indent: 6
+----
+
 _Result_
 
 image:indent.png[]
@@ -2565,6 +3076,93 @@ w.sheet("Sample", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "From bottom to top (90)",
+              "height": 150,
+              "width": 20,
+              "styles": [
+                {
+                  "rotation": 90
+                }
+              ]
+            },
+            {
+              "value": "From bottom to top (45)",
+              "width": 20,
+              "styles": [
+                {
+                  "rotation": 45
+                }
+              ]
+            },
+            {
+              "value": "Normal",
+              "width": 20
+            },
+            {
+              "value": "From top to bottom (135)",
+              "width": 20,
+              "styles": [
+                {
+                  "rotation": 135
+                }
+              ]
+            },
+            {
+              "value": "From top to bottom (180)",
+              "width": 20,
+              "styles": [
+                {
+                  "rotation": 180
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: From bottom to top (90)
+      height: 150
+      width: 20
+      styles:
+      - rotation: 90
+    - value: From bottom to top (45)
+      width: 20
+      styles:
+      - rotation: 45
+    - value: Normal
+      width: 20
+    - value: From top to bottom (135)
+      width: 20
+      styles:
+      - rotation: 135
+    - value: From top to bottom (180)
+      width: 20
+      styles:
+      - rotation: 180
+----
+
 _Result_
 
 image:rotation.png[]
@@ -2625,6 +3223,62 @@ w.sheet("Sample", s-> {
         });
     });
 }
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "This text will be wrapped. To the next line.\nAnd another as well.\n",
+              "width": "auto",
+              "height": 100,
+              "styles": [
+                {
+                  "wrap": true
+                }
+              ]
+            },
+            {
+              "value": "This text will not be wrapped. Not even to to the next line.\nEven another one.\n",
+              "width": "auto"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: |
+        This text will be wrapped.
+        To the next line.
+
+        And another as well.
+      width: auto
+      height: 100
+      styles:
+      - wrap: true
+    - value: |
+        This text will not be wrapped.
+        Not even to to the next line.
+
+        Even another one.
+      width: auto
 ----
 
 _Result_
