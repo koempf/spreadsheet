@@ -665,6 +665,33 @@ w.sheet("Very hidden", s ->
 );
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Hidden",
+      "state": "hidden"
+    },
+    {
+      "name": "Very hidden",
+      "state": "veryHidden"
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Hidden
+  state: hidden
+- name: Very hidden
+  state: veryHidden
+----
+
 === Automatic Filters
 
 You can create an automatic filter for all data in given sheet.
@@ -709,6 +736,69 @@ w.sheet("Filtered", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Filtered",
+      "filter": true,
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Name"
+            },
+            {
+              "value": "Profession"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "Donald"
+            },
+            {
+              "value": "Sailor"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "Bob"
+            },
+            {
+              "value": "Builder"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Filtered
+  filter: true
+  rows:
+  - cells:
+    - value: Name
+    - value: Profession
+  - cells:
+    - value: Donald
+    - value: Sailor
+  - cells:
+    - value: Bob
+    - value: Builder
+----
+
 _Result_
 
 image:filtered.png[]
@@ -745,6 +835,49 @@ w.sheet("Custom Page", s -> {
         r.cell("A5 Landcapse");
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Custom Page",
+      "page": {
+        "fit": {
+          "width": 1
+        },
+        "paper": "a5",
+        "orientation": "landscape"
+      },
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "A5 Landcapse"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Custom Page
+  page:
+    fit:
+      width: 1
+    paper: a5
+    orientation: landscape
+  rows:
+  - cells:
+    - value: A5 Landcapse
 ----
 
 == Cells
@@ -791,6 +924,55 @@ w.sheet("Sample", s -> {
         r.cell("G", c -> c.formula("YEAR(TODAY())"));
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "First"
+            },
+            null,
+            {
+              "value": "Third"
+            },
+            {
+              "column": 5,
+              "value": "Fifth"
+            },
+            {
+              "column": "G",
+              "formula": "YEAR(TODAY())"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: First
+    -
+    - value: Third
+    - column: 5
+      value: Fifth
+    - column: G
+      formula: YEAR(TODAY())
 ----
 
 _Result_
@@ -864,6 +1046,76 @@ w.sheet("Sample", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Columns",
+              "colspan": 2
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "Rows",
+              "rowspan": 3
+            },
+            {
+              "value": "Value 1"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "column": "B",
+              "value": "Value 2"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "column": "B",
+              "value": "Value 3"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: Columns
+      colspan: 2
+  - cells:
+    - value: Rows
+      rowspan: 3
+    - value: Value 1
+  - cells:
+    - column: B
+      value: Value 2
+  - cells:
+    - column: B
+      value: Value 3
+----
+
 _Result_
 
 image:spans.png[]
@@ -885,6 +1137,44 @@ cell ('C') {
 r.cell("C", c -> {
     c.png(image).from("https://goo.gl/UcL1wy");
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Image",
+      "rows": [
+        {
+          "cells": [
+            {
+              "column": "C",
+              "image": {
+                "type": "png",
+                "url": "https://goo.gl/UcL1wy"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Image
+  rows:
+  - cells:
+    - column: C
+      image:
+        type: png
+        url: https://goo.gl/UcL1wy
 ----
 
 _Result_
@@ -949,6 +1239,57 @@ w.sheet("Sample", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Commented 1",
+              "comment": {
+                "text": "This is a comment 1"
+              }
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": "Commented 2",
+              "comment": {
+                "author": "musketyr",
+                "text": "This is a comment 2"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: Commented 1
+      comment:
+        text: This is a comment 1
+  - cells:
+    - value: Commented 2
+      comment:
+        author: musketyr
+        text: This is a comment 2
+----
 
 _Result_
 
@@ -1011,6 +1352,65 @@ w.sheet("Sample", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "A"
+            },
+            {
+              "value": "B"
+            },
+            {
+              "value": "A + B"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": 10,
+              "name": "_CellA"
+            },
+            {
+              "value": 20,
+              "name": "_CellB"
+            },
+            {
+              "formula": "SUM(#{_CellA},#{_CellB})"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: A
+    - value: B
+    - value: A + B
+  - cells:
+    - value: 10
+      name: _CellA
+    - value: 20
+      name: _CellB
+    - formula: SUM(#{_CellA},#{_CellB})
+----
 
 _Result_
 
@@ -1115,6 +1515,82 @@ w.sheet("Links", s -> {
 });
 ----
 
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Hello World",
+              "name": "Salutation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Links",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "Document",
+              "link": "Salutation",
+              "width": "auto"
+            },
+            {
+              "value": "File",
+              "link": "file:text.txt"
+            },
+            {
+              "value": "URL",
+              "link": "https://www.google.com"
+            },
+            {
+              "value": "Mail (plain)",
+              "link": "mailto:vladimir@orany.cz"
+            },
+            {
+              "value": "Mail (with subject)",
+              "link": "mailto:vladimir@orany.cz?subject=Testing+Excel+Builder&body=It+is+really+great+tools"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Sample
+  rows:
+  - cells:
+    - value: Hello World
+      name: Salutation
+- name: Links
+  rows:
+  - cells:
+    - value: Document
+      link: Salutation
+      width: auto
+    - value: File
+      link: file:text.txt
+    - value: URL
+      link: https://www.google.com
+    - value: Mail (plain)
+      link: mailto:vladimir@orany.cz
+    - value: Mail (with subject)
+      link: mailto:vladimir@orany.cz?subject=Testing+Excel+Builder&body=It+is+really+great+tools
+----
 
 [TIP]
 ====
@@ -1185,6 +1661,71 @@ w.sheet("Dimensions", s -> {
         });
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "sheets": [
+    {
+      "name": "Dimensions",
+      "rows": [
+        {
+          "cells": [
+            {
+              "value": "cm",
+              "height": "1 cm",
+              "width": "1 cm"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "column": "B",
+              "value": "inches",
+              "width": "1 inch",
+              "height": "1 inch"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "column": "C",
+              "value": "points",
+              "width": 10,
+              "height": 50
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+sheets:
+- name: Dimensions
+  rows:
+  - cells:
+    - value: cm
+      height: 1 cm
+      width: 1 cm
+  - cells:
+    - column: B
+      value: inches
+      width: 1 inch
+      height: 1 inch
+  - cells:
+    - column: C
+      value: points
+      width: 10
+      height: 50
 ----
 
 _Result_
@@ -1283,6 +1824,109 @@ w.sheet("Sample", s -> {
         r.cell("Helps building nice spreadsheet reports");
     });
 });
+----
+
+[source,json,indent=0,role="secondary"]
+.JSON
+----
+{
+  "styles": [
+    {
+      "name": "headers",
+      "borders": [
+        {
+          "side": [
+            "bottom"
+          ],
+          "style": "thin",
+          "color": "black"
+        }
+      ],
+      "font": {
+        "style": "bold"
+      },
+      "background": "whiteSmoke"
+    }
+  ],
+  "sheets": [
+    {
+      "name": "Sample",
+      "rows": [
+        {
+          "styles": [
+            "headers"
+          ],
+          "cells": [
+            {
+              "value": "No.",
+              "width": 5
+            },
+            {
+              "value": "Name",
+              "width": 30
+            },
+            {
+              "value": "Description",
+              "width": "auto"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "value": 1
+            },
+            {
+              "value": "Groovy Spreadsheet Builder",
+              "styles": [
+                {
+                  "font": {
+                    "style": "bold"
+                  }
+                }
+              ]
+            },
+            {
+              "value": "Helps building nice spreadsheet reports"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+----
+
+[source,indent=0,role="secondary"]
+.YAML
+----
+styles:
+- name: headers
+  borders:
+  - side: [bottom]
+    style: thin
+    color: black
+  font:
+    style: bold
+  background: whiteSmoke
+sheets:
+- name: Sample
+  rows:
+  - styles: [headers]
+    cells:
+    - value: No.
+      width: 5
+    - value: Name
+      width: 30
+    - value: Description
+      width: auto
+  - cells:
+    - value: 1
+    - value: Groovy Spreadsheet Builder
+      styles:
+      - font:
+          style: bold
+    - value: Helps building nice spreadsheet reports
 ----
 
 _Result_
