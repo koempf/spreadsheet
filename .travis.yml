@@ -11,7 +11,7 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 before_install:
-- openssl aes-256-cbc -K $encrypted_f111e753d6a8_key -iv $encrypted_f111e753d6a8_iv -in .travis/StoredCredential.enc -out spreadsheet-builder-google/tokens/StoredCredential-d
+- openssl aes-256-cbc -K $encrypted_f111e753d6a8_key -iv $encrypted_f111e753d6a8_iv -in .travis/StoredCredential.enc -out spreadsheet-builder-google/tokens/StoredCredential -d
 env:
   global:
     # DSL_SPREADSHEET_BUILDER_GOOGLE_CLIENT_SECRET
