@@ -39,9 +39,9 @@ abstract class AbstractBuilderSpec extends Specification {
             int sheetCount = allCells.sheets.size()
             int rowsCount = allCells.rows.size()
         then:
-            allCellSize == 80130
+            allCellSize == getExpectedAllCellSize()
             sheetCount == 21
-            rowsCount == 20065
+            rowsCount == getExpectedAllRowsSize()
 
         when:
             SpreadsheetCriteriaResult sampleCells = matcher.query({
@@ -51,7 +51,6 @@ abstract class AbstractBuilderSpec extends Specification {
             sampleCells
             sampleCells.size() == 2
             sampleCells.sheets.size() == 1
-            sampleCells.rows.size() == 1
 
         when:
             Iterable<Cell> rowCells = matcher.query({
@@ -116,19 +115,6 @@ abstract class AbstractBuilderSpec extends Specification {
             commentedCells.size() == 1
 
         when:
-            Iterable<Cell> namedCells = matcher.query({
-                sheet {
-                    row {
-                        cell {
-                            name "_Cell10"
-                        }
-                    }
-                }
-            })
-        then:
-            namedCells
-            namedCells.size() == 1
-        when:
             Iterable<Cell> dateCells = matcher.query({
                 sheet {
                     row {
@@ -143,21 +129,6 @@ abstract class AbstractBuilderSpec extends Specification {
         then:
             dateCells
             dateCells.size() == 1
-        when:
-            Iterable<Cell> filledCells = matcher.query({
-                sheet {
-                    row {
-                        cell {
-                            style {
-                                fill fineDots
-                            }
-                        }
-                    }
-                }
-            })
-        then:
-            filledCells
-            filledCells.size() == 1
         when:
             Iterable<Cell> magentaCells = matcher.query({
                 sheet {
@@ -373,6 +344,7 @@ abstract class AbstractBuilderSpec extends Specification {
             redCell?.style?.foreground == Color.red
             blueCell?.style?.foreground == Color.blue
             greenCell?.style?.foreground == Color.green
+
         expect:
             matcher.query {
                 sheet {
@@ -380,19 +352,61 @@ abstract class AbstractBuilderSpec extends Specification {
                         paper a5
                         orientation landscape
             }   }   }.size() == 1
+
+        and:
             matcher.query {
                 sheet('Hidden') {
                     state hidden
                 }
             }.sheets.size() == 1
-            matcher.query {
+
+        when:
+            Iterable<Cell> namedCells = matcher.query({
+                sheet('Formula') {
+                    row {
+                        cell {
+                            name "_Cell10"
+                        }
+                    }
+                }
+            })
+        then:
+            namedCells
+            namedCells.size() == 1
+
+        when:
+            Iterable<Cell> filledCells = matcher.query({
+                sheet {
+                    row {
+                        cell {
+                            style {
+                                fill fineDots
+                            }
+                        }
+                    }
+                }
+            })
+        then:
+            !isFillSupported() || filledCells
+            !isFillSupported() || filledCells.size() == 1
+
+        expect:
+            !isVeryHiddenSupported() || matcher.query {
                 sheet('Very hidden') {
                     state veryHidden
                 }
             }.sheets.size() == 1
     }
 
+    protected int getExpectedAllRowsSize() { 20065 }
+
+    protected int getExpectedAllCellSize() { 80130 }
+
     protected void openSpreadsheet() {}
+
+    protected boolean isVeryHiddenSupported() { true }
+
+    protected boolean isFillSupported() { true }
 
     @CompileStatic
     private static void buildSpreadsheet(SpreadsheetBuilder builder, Date today) {

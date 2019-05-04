@@ -259,6 +259,10 @@ import space.jasan.support.groovy.closure.ConsumerWithDelegate
         sheet.or(ConsumerWithDelegate.create(sheetCriterion))
     }
 
+    static boolean asBoolean(SpreadsheetCriteriaResult result) {
+        result.sheets || result.rows || result.cells
+    }
+
     static SpreadsheetCriteriaResult query(SpreadsheetCriteria criteria, @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = WorkbookCriterion.class) @ClosureParams(value = FromString.class, options = "builders.dsl.spreadsheet.query.api.WorkbookCriterion") Closure workbookCriterion) throws FileNotFoundException {
         criteria.query(ConsumerWithDelegate.create(workbookCriterion))
     }

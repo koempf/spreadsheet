@@ -113,13 +113,11 @@ class PoiCell implements Cell {
     public String getName() {
         Workbook wb = xssfCell.getSheet().getWorkbook();
 
-        new CellReference(xssfCell).formatAsString();
         List<String> possibleReferences = new ArrayList<String>(Arrays.asList(new CellReference(xssfCell).formatAsString(), generateRefersToFormula()));
-        for (int nn = 0; nn < wb.getNumberOfNames(); nn++) {
-            Name n = ((XSSFWorkbook) wb).getNameAt(nn);
-            for (String reference : possibleReferences) {
-                if (n.getSheetIndex() == -1 || n.getSheetIndex() == wb.getSheetIndex(xssfCell.getSheet())) {
-                    if (n.getRefersToFormula().equals(reference)) {
+        for (Name n : wb.getAllNames()) {
+            if (n.getSheetIndex() == -1 || n.getSheetIndex() == wb.getSheetIndex(xssfCell.getSheet())) {
+                for (String reference : possibleReferences) {
+                    if (normalizeFormulaReference(n.getRefersToFormula()).equalsIgnoreCase(normalizeFormulaReference(reference))) {
                         return n.getNameName();
                     }
                 }
@@ -340,6 +338,10 @@ class PoiCell implements Cell {
         }
 
         return row.getSheet().getRow(address.getFirstRow()).getCell(address.getFirstColumn());
+    }
+
+    private static String normalizeFormulaReference(String ref) {
+        return ref.replace("$", "").replace("'", "");
     }
 
     private PoiCell createCellIfExists(XSSFCell cell) {

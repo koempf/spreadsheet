@@ -2,11 +2,17 @@ language: groovy
 jdk:
 - oraclejdk8
 script:
-  - "./gradlew check"
+- "./gradlew check"
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+before_install:
+- openssl aes-256-cbc -K $encrypted_f111e753d6a8_key -iv $encrypted_f111e753d6a8_iv -in .travis/StoredCredential.enc -out spreadsheet-builder-google/tokens/StoredCredential-d
+env:
+  global:
+    # DSL_SPREADSHEET_BUILDER_GOOGLE_CLIENT_SECRET
+    secure: RNSH8YJJfrGHgzXbN41yRPBWRfqFPu9FNiyQRsBVW9NfbUHjP6kyzPk3komVVtouSWSWKBPkS6MnEH25lRlfI8QsJv2qQbxT2gaNKK9ACQtOm1bcMYLMxh+jzFPzm7eAE7VeBRHJkl7IMQitr7wI/gsci5dDzCg46yw0FAqZvRyCu2bjF1xGjUyLGBOyjxLANmf146zHrzvWSwS6N8d8fdYJhjsIry4pSmIC8T6Au7ALWLly8z7O8i/rDJU4iTdpb+7FmSC2lUf2lB4X2kXxIYMvtc1RspcHzVJQC2bc6/LBbWD9DvTjYt7NmJ7y9qBpoaqG3d1ZejvJHl5J2HDxouy5KwgXRrcS8rIdVNPWsG4TEg35Z/rF1Ha7DJRbts19K13JwrFhKZopeWy4CCnyg/L5ijbQNeHQw60I09mJZJODrt2r7NdIIP1CMRrHcRc5j90LG/L+e+gWqAi29X61LXWyVm9sUPAWJ884HZWlszk5nNGMNqT6aYhnfNtKIgLgfb2EXu/CB9EROCcGfjO+JKBq2WCBrtOZvF8Dd+yGjAk0nnQ5DByYW90+/A58Nyl8QuyvwsmO8BEyGy1aQo9FMQmWvkYYJpdekp54y9Et7V8JmR9DfIEf4SqUiOaXAtxp2Y5i9FdW0glkrDFbhwI2Kg9nwGwcqs8erM/WY2rW/I0=
