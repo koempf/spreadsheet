@@ -51,10 +51,10 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
         FileList files = null
 
         while (!files || files.getIncompleteSearch()) {
-            files = service.files().list().execute()
+            files = service.files().list().setPageToken(files?.getNextPageToken()).execute()
             for (File file in files.getFiles()) {
                 if (file.getName() == FILENAME) {
-                    service.files().delete(file.getId())
+                    service.files().delete(file.getId()).execute()
                 }
             }
         }
