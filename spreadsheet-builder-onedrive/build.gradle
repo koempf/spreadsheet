@@ -1,0 +1,3 @@
+dependencies {
+    compile 'com.microsoft.graph:microsoft-graph:1.3.0'
+}
