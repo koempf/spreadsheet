@@ -4,7 +4,6 @@ import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria;
 import builders.dsl.spreadsheet.query.poi.PoiSpreadsheetCriteria;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
@@ -31,9 +30,7 @@ public class GoogleSpreadsheetCriteriaFactory {
     }
 
     public SpreadsheetCriteria criteria() throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-
-        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credentials)
+        Drive service = new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credentials)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 

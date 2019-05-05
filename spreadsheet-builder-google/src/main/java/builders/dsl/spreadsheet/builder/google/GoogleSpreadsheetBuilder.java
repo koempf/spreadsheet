@@ -31,8 +31,8 @@ public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
     private final String name;
     private final HttpRequestInitializer credentials;
 
-    private String webLink = null;
-    private String id = null;
+    private String webLink;
+    private String id;
 
     private GoogleSpreadsheetBuilder(String name, HttpRequestInitializer credentials) {
         this.name = name;
@@ -56,9 +56,9 @@ public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
      * @return web view link of the newly created file
      */
     public String upload(Consumer<WorkbookDefinition> workbookDefinition) throws GeneralSecurityException, IOException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
-        Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credentials)
+        Drive service = new Drive.Builder(httpTransport, JSON_FACTORY, credentials)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 

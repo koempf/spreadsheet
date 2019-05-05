@@ -5,16 +5,11 @@ import builders.dsl.spreadsheet.builder.google.GoogleSpreadsheetBuilder
 import builders.dsl.spreadsheet.builder.tck.AbstractBuilderSpec
 import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria
 import builders.dsl.spreadsheet.query.google.GoogleSpreadsheetCriteriaFactory
-import com.google.api.client.auth.oauth2.AuthorizationCodeTokenRequest
-import com.google.api.client.auth.oauth2.ClientParametersAuthentication
-import com.google.api.client.auth.oauth2.TokenResponse
-import com.google.api.client.auth.oauth2.TokenResponseException
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
-import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpRequestInitializer
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.JsonFactory
@@ -28,25 +23,27 @@ import spock.lang.Requires
 
 import java.awt.Desktop
 
-@Requires({ System.getenv('DSL_SPREADSHEET_BUILDER_GOOGLE_CLIENT_SECRET')})
+@SuppressWarnings('ClassStartsWithBlankLine')
+@Requires({ System.getenv('DSL_SPREADSHEET_BUILDER_GOOGLE_CLIENT_SECRET') })
 class GoogleBuilderSpec extends AbstractBuilderSpec {
 
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance()
-    private static final String TOKENS_DIRECTORY_PATH = "tokens"
+    private static final JsonFactory JSON_FACTORY = JacksonFactory.defaultInstance
+    private static final String TOKENS_DIRECTORY_PATH = 'tokens'
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE)
-    private static final String CREDENTIALS_FILE_PATH = "credentials.json"
+    private static final String CREDENTIALS_FILE_PATH = 'credentials.json'
     private static final GoogleClientSecrets GOOGLE_SECRETS = buildGoogleSecrets()
-    private static final String FILENAME = "DELETE ME"
+    private static final String FILENAME = 'DELETE ME'
 
     HttpRequestInitializer credentials = buildCredentials(GOOGLE_SECRETS)
     GoogleSpreadsheetBuilder builder = GoogleSpreadsheetBuilder.create(FILENAME, credentials)
 
+    @SuppressWarnings('UnnecessaryGetter')
     void cleanup() {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport()
 
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credentials)
                 .setApplicationName('Google Builder Spec')
-                .build();
+                .build()
 
         FileList files = null
 
@@ -73,7 +70,7 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
 
     @Override
     protected void openSpreadsheet() {
-        println "Open browser at $builder.webLink"
+        open builder.webLink
     }
 
     @Override
@@ -100,34 +97,15 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
                 Desktop.desktop.browse(new URI(uri))
                 Thread.sleep(10000)
             }
-        } catch(ignored) {
+        } catch (ignored) {
             // CI
         }
     }
 
-    static void requestAccessToken() throws IOException {
-        try {
-            TokenResponse response = new AuthorizationCodeTokenRequest(new NetHttpTransport(),
-                    new JacksonFactory(), new GenericUrl("https://server.example.com/token"),
-                    "SplxlOBeZQQYbYS6WxSbIA").setRedirectUri("https://client.example.com/rd")
-                                             .setClientAuthentication(
-                    new ClientParametersAuthentication("s6BhdRkqt3", "7Fjfp0ZBr1KtDRbnfVdmIw")).execute()
-            System.out.println("Access token: " + response.getAccessToken())
-        } catch (TokenResponseException e) {
-            if (e.getDetails() != null) {
-                System.err.println("Error: " + e.getDetails().getError())
-                if (e.getDetails().getErrorDescription() != null) {
-                    System.err.println(e.getDetails().getErrorDescription())
-                }
-                if (e.getDetails().getErrorUri() != null) {
-                    System.err.println(e.getDetails().getErrorUri())
-                }
-            } else {
-                System.err.println(e.getMessage())
-            }
-        }
-    }
-
+    @SuppressWarnings([
+            'UnnecessaryGetter',
+            'UnnecessarySetter',
+    ])
     private static GoogleClientSecrets buildGoogleSecrets() {
         InputStream is = GoogleBuilderSpec.getResourceAsStream(CREDENTIALS_FILE_PATH)
         GoogleClientSecrets secrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(is))
@@ -137,14 +115,19 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
         return secrets
     }
 
+    @SuppressWarnings([
+            'UnnecessaryGetter',
+            'UnnecessarySetter',
+    ])
     private static HttpRequestInitializer buildCredentials(GoogleClientSecrets secrets) {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport()
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, secrets, SCOPES)
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("offline")
+                .setAccessType('offline')
                 .build()
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build()
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user")
+        return new AuthorizationCodeInstalledApp(flow, receiver).authorize('user')
     }
+
 }

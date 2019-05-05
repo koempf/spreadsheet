@@ -7,12 +7,12 @@ import spock.lang.Unroll
 class PoiCellStyleSpec extends Specification {
 
     @Unroll
-    def "parse #hex to #r,#g,#b"() {
+    void "parse #hex to #r,#g,#b"() {
         when:
         XSSFColor color = PoiCellStyleDefinition.parseColor(hex)
 
         then:
-        color.getRGB() == [r,g,b] as byte[]
+        color.RGB == [r, g, b] as byte[]
 
         where:
         hex         | r     | g     | b
@@ -20,4 +20,5 @@ class PoiCellStyleSpec extends Specification {
         '#aabbcc'   |  -86  |  -69  | -52
         '#ffffff'   |   -1  |   -1  |  -1
     }
+
 }
