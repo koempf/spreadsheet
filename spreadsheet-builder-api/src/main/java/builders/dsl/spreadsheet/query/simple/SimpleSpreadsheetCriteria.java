@@ -32,12 +32,12 @@ public final class SimpleSpreadsheetCriteria implements SpreadsheetCriteria {
     }
 
     @Override
-    public SpreadsheetCriteriaResult query(Consumer<WorkbookCriterion> workbookCriterion) throws FileNotFoundException {
+    public SpreadsheetCriteriaResult query(Consumer<WorkbookCriterion> workbookCriterion) {
         return queryInternal(Integer.MAX_VALUE, workbookCriterion);
     }
 
     @Override
-    public Cell find(Consumer<WorkbookCriterion> workbookCriterion) throws FileNotFoundException {
+    public Cell find(Consumer<WorkbookCriterion> workbookCriterion) {
         SpreadsheetCriteriaResult cells = queryInternal(1, workbookCriterion);
         Iterator<Cell> cellIterator = cells.iterator();
         if (cellIterator.hasNext()) {
@@ -47,7 +47,7 @@ public final class SimpleSpreadsheetCriteria implements SpreadsheetCriteria {
     }
 
     @Override
-    public boolean exists(Consumer<WorkbookCriterion> workbookCriterion) throws FileNotFoundException {
+    public boolean exists(Consumer<WorkbookCriterion> workbookCriterion) {
         return find(workbookCriterion) != null;
     }
 
