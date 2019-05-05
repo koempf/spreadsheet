@@ -285,8 +285,8 @@ abstract class AbstractBuilderSpec extends Specification {
             cellE.row.number == 2
             cellE.row.above
             cellE.row.above.number == 1
-            cellE.row.bellow
-            cellE.row.bellow.number == 3
+            cellE.row.below
+            cellE.row.below.number == 3
             cellE.colspan == 2
             cellE.aboveLeft
             cellE.aboveLeft.value == 'A'
@@ -298,13 +298,13 @@ abstract class AbstractBuilderSpec extends Specification {
             cellE.left.value == 'D'
             cellE.right
             cellE.right.value == 'F'
-            cellE.bellowLeft
-            cellE.bellowLeft.value == 'G'
-            cellE.bellowRight
-            cellE.bellowRight.value == 'I'
-            cellE.bellow
-            cellE.bellow.value == 'H'
-            cellE.bellow.bellow.value == 'J'
+            cellE.belowLeft
+            cellE.belowLeft.value == 'G'
+            cellE.belowRight
+            cellE.belowRight.value == 'I'
+            cellE.below
+            cellE.below.value == 'H'
+            cellE.below.below.value == 'J'
         when:
             Iterable<Cell> zeroCells = matcher.query {
                 sheet('Zero') {

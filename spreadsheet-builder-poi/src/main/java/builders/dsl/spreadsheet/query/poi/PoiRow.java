@@ -46,7 +46,7 @@ class PoiRow implements Row {
 
     @Override
     public PoiRow getAbove(int howMany) {
-        return aboveOrBellow(-howMany);
+        return aboveOrBelow(-howMany);
     }
 
     @Override
@@ -55,13 +55,13 @@ class PoiRow implements Row {
     }
 
     @Override
-    public PoiRow getBellow(int howMany) {
-        return aboveOrBellow(howMany);
+    public PoiRow getBelow(int howMany) {
+        return aboveOrBelow(howMany);
     }
 
     @Override
-    public PoiRow getBellow() {
-        return getBellow(1);
+    public PoiRow getBelow() {
+        return getBelow(1);
     }
 
     builders.dsl.spreadsheet.api.Cell getCellByNumber(int oneBasedColumnNumber) {
@@ -71,7 +71,7 @@ class PoiRow implements Row {
         return cells.get(oneBasedColumnNumber);
     }
 
-    private PoiRow aboveOrBellow(int howMany) {
+    private PoiRow aboveOrBelow(int howMany) {
         if (xssfRow.getRowNum() + howMany < 0 || xssfRow.getRowNum() + howMany >  xssfRow.getSheet().getLastRowNum()) {
             return null;
         }

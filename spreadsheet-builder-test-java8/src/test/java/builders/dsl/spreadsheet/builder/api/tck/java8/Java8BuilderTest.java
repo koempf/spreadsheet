@@ -311,8 +311,8 @@ public class Java8BuilderTest {
         assertEquals(2, cellE.getRow().getNumber());
         assertNotNull(cellE.getRow().getAbove());
         assertEquals(1, cellE.getRow().getAbove().getNumber());
-        assertNotNull(cellE.getRow().getBellow());
-        assertEquals(3, cellE.getRow().getBellow().getNumber());
+        assertNotNull(cellE.getRow().getBelow());
+        assertEquals(3, cellE.getRow().getBelow().getNumber());
         assertEquals(2, cellE.getColspan());
         assertNotNull(cellE.getAboveLeft());
         assertEquals("A", cellE.getAboveLeft().getValue());
@@ -324,13 +324,13 @@ public class Java8BuilderTest {
         assertEquals("D", cellE.getLeft().getValue());
         assertNotNull(cellE.getRight());
         assertEquals("F", cellE.getRight().getValue());
-        assertNotNull(cellE.getBellowLeft());
-        assertEquals("G", cellE.getBellowLeft().getValue());
-        assertNotNull(cellE.getBellowRight());
-        assertEquals("I", cellE.getBellowRight().getValue());
-        assertNotNull(cellE.getBellow());
-        assertEquals("H", cellE.getBellow().getValue());
-        assertEquals("J", cellE.getBellow().getBellow().getValue());
+        assertNotNull(cellE.getBelowLeft());
+        assertEquals("G", cellE.getBelowLeft().getValue());
+        assertNotNull(cellE.getBelowRight());
+        assertEquals("I", cellE.getBelowRight().getValue());
+        assertNotNull(cellE.getBelow());
+        assertEquals("H", cellE.getBelow().getValue());
+        assertEquals("J", cellE.getBelow().getBelow().getValue());
 
         SpreadsheetCriteriaResult zeroCells = matcher.query(w -> {
             w.sheet("Zero", s -> {

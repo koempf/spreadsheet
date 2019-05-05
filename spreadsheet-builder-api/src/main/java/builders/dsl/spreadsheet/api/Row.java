@@ -11,7 +11,7 @@ public interface Row {
 
     Row getAbove();
     Row getAbove(int howMany);
-    Row getBellow();
-    Row getBellow(int howMany);
+    Row getBelow();
+    Row getBelow(int howMany);
 
 }

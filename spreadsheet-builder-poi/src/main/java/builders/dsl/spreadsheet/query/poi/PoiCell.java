@@ -182,8 +182,8 @@ class PoiCell implements Cell {
     }
 
     @Override
-    public Cell getBellow() {
-        PoiRow row = this.row.getBellow(getRowspan());
+    public Cell getBelow() {
+        PoiRow row = this.row.getBelow(getRowspan());
         if (row == null) {
             return null;
         }
@@ -273,8 +273,8 @@ class PoiCell implements Cell {
     }
 
     @Override
-    public Cell getBellowLeft() {
-        PoiRow row = this.row.getBellow();
+    public Cell getBelowLeft() {
+        PoiRow row = this.row.getBelow();
         if (row == null) {
             return null;
         }
@@ -294,8 +294,8 @@ class PoiCell implements Cell {
     }
 
     @Override
-    public Cell getBellowRight() {
-        PoiRow row = this.row.getBellow();
+    public Cell getBelowRight() {
+        PoiRow row = this.row.getBelow();
         if (row == null) {
             return null;
         }
