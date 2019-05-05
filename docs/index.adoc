@@ -2417,6 +2417,7 @@ Added indirect support for Google Spreadsheet.
 === Breaking Changes
 * changed closure's owner handling so the `owner` is always the `owmner` of top level closure
 * renamed occurrences if `below` to `below`
+* upgraded POI libraries to 4.1.0 and OOXML 1.4
 
 == 1.0.5
 Fixed problem with fetching cells `above` or `below` when cell list in the row.

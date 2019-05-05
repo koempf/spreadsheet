@@ -70,17 +70,17 @@ class PoiCell implements Cell {
     @Override
     public Object getValue() {
         switch (xssfCell.getCellType()) {
-            case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK:
+            case BLANK:
                 return "";
-            case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN:
+            case BOOLEAN:
                 return xssfCell.getBooleanCellValue();
-            case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_ERROR:
+            case ERROR:
                 return xssfCell.getErrorCellString();
-            case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_FORMULA:
+            case FORMULA:
                 return xssfCell.getCellFormula();
-            case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC:
+            case NUMERIC:
                 return xssfCell.getNumericCellValue();
-            case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING:
+            case STRING:
                 return xssfCell.getStringCellValue();
         }
         return xssfCell.getRawValue();

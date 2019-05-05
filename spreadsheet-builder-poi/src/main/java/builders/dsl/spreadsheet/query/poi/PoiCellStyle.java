@@ -34,39 +34,39 @@ class PoiCellStyle implements CellStyle {
     @Override
     public ForegroundFill getFill() {
         switch (style.getFillPattern()) {
-            case org.apache.poi.ss.usermodel.CellStyle.NO_FILL:
+            case NO_FILL:
                 return ForegroundFill.NO_FILL;
-            case org.apache.poi.ss.usermodel.CellStyle.SOLID_FOREGROUND:
+            case SOLID_FOREGROUND:
                 return ForegroundFill.SOLID_FOREGROUND;
-            case org.apache.poi.ss.usermodel.CellStyle.FINE_DOTS:
+            case FINE_DOTS:
                 return ForegroundFill.FINE_DOTS;
-            case org.apache.poi.ss.usermodel.CellStyle.ALT_BARS:
+            case ALT_BARS:
                 return ForegroundFill.ALT_BARS;
-            case org.apache.poi.ss.usermodel.CellStyle.SPARSE_DOTS:
+            case SPARSE_DOTS:
                 return ForegroundFill.SPARSE_DOTS;
-            case org.apache.poi.ss.usermodel.CellStyle.THICK_HORZ_BANDS:
+            case THICK_HORZ_BANDS:
                 return ForegroundFill.THICK_HORZ_BANDS;
-            case org.apache.poi.ss.usermodel.CellStyle.THICK_VERT_BANDS:
+            case THICK_VERT_BANDS:
                 return ForegroundFill.THICK_VERT_BANDS;
-            case org.apache.poi.ss.usermodel.CellStyle.THICK_BACKWARD_DIAG:
+            case THICK_BACKWARD_DIAG:
                 return ForegroundFill.THICK_BACKWARD_DIAG;
-            case org.apache.poi.ss.usermodel.CellStyle.THICK_FORWARD_DIAG:
+            case THICK_FORWARD_DIAG:
                 return ForegroundFill.THICK_FORWARD_DIAG;
-            case org.apache.poi.ss.usermodel.CellStyle.BIG_SPOTS:
+            case BIG_SPOTS:
                 return ForegroundFill.BIG_SPOTS;
-            case org.apache.poi.ss.usermodel.CellStyle.BRICKS:
+            case BRICKS:
                 return ForegroundFill.BRICKS;
-            case org.apache.poi.ss.usermodel.CellStyle.THIN_HORZ_BANDS:
+            case THIN_HORZ_BANDS:
                 return ForegroundFill.THIN_HORZ_BANDS;
-            case org.apache.poi.ss.usermodel.CellStyle.THIN_VERT_BANDS:
+            case THIN_VERT_BANDS:
                 return ForegroundFill.THIN_VERT_BANDS;
-            case org.apache.poi.ss.usermodel.CellStyle.THIN_BACKWARD_DIAG:
+            case THIN_BACKWARD_DIAG:
                 return ForegroundFill.THIN_BACKWARD_DIAG;
-            case org.apache.poi.ss.usermodel.CellStyle.THIN_FORWARD_DIAG:
+            case THIN_FORWARD_DIAG:
                 return ForegroundFill.THIN_FORWARD_DIAG;
-            case org.apache.poi.ss.usermodel.CellStyle.SQUARES:
+            case SQUARES:
                 return ForegroundFill.SQUARES;
-            case org.apache.poi.ss.usermodel.CellStyle.DIAMONDS:
+            case DIAMONDS:
                 return ForegroundFill.DIAMONDS;
         }
         return null;
