@@ -15,36 +15,69 @@ import java.util.function.Consumer;
 
 public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
 
-    public static GoogleSpreadsheetBuilder create(String name, HttpRequestInitializer credentials) {
-        return create(name, (InputStream) null, GoogleSpreadsheets.create(credentials));
+    public static class Builder {
+        private final String name;
+        private final GoogleSpreadsheets spreadsheets;
+
+        private String id;
+        private InputStream template;
+
+        private Builder(String name, GoogleSpreadsheets spreadsheets) {
+            this.name = name;
+            this.spreadsheets = spreadsheets;
+        }
+
+        /**
+         * Replace the spreadsheet of given ID instead of creating a new document.
+         * @param spreadsheetID id of the document
+         * @return self
+         */
+        public Builder id(String spreadsheetID) {
+            this.id = id;
+            return this;
+        }
+
+        /**
+         * Create a spreadsheet from template supplied as an input stream.
+         * @param template sheet template
+         * @return self
+         */
+        public Builder template(InputStream template) {
+            this.template = template;
+            return this;
+        }
+
+        /**
+         * Create a spreadsheet from template Google Spreadsheet
+         * @param spreadsheetId sheet template id
+         * @return self
+         */
+        public Builder template(String spreadsheetId) {
+            this.template = spreadsheets.convertAndDownload(spreadsheetId);
+            return this;
+        }
+
+        /**
+         * Create a spreadsheet from template supplied as a file
+         * @param file sheet template
+         * @return self
+         */
+        public Builder template(java.io.File file) throws FileNotFoundException {
+            this.template = new FileInputStream(file);
+            return this;
+        }
+
+        public GoogleSpreadsheetBuilder build() {
+            return new GoogleSpreadsheetBuilder(id, name, template, spreadsheets);
+        }
     }
 
-    public static GoogleSpreadsheetBuilder create(String name, GoogleSpreadsheets spreadsheets) {
-        return create(name, (InputStream) null, spreadsheets);
+    public static GoogleSpreadsheetBuilder.Builder builder(String name, HttpRequestInitializer credentials) {
+        return builder(name, GoogleSpreadsheets.create(credentials));
     }
 
-    public static GoogleSpreadsheetBuilder create(String name, String spreadsheetTemplateId, HttpRequestInitializer credentials) {
-        return create(name, spreadsheetTemplateId, GoogleSpreadsheets.create(credentials));
-    }
-
-    public static GoogleSpreadsheetBuilder create(String name, String spreadsheetTemplateId, GoogleSpreadsheets spreadsheets) {
-        return create(name, spreadsheets.convertAndDownload(spreadsheetTemplateId), spreadsheets);
-    }
-
-    public static GoogleSpreadsheetBuilder create(String name, java.io.File templateFile, HttpRequestInitializer credentials) throws FileNotFoundException {
-        return create(name, templateFile, GoogleSpreadsheets.create(credentials));
-    }
-
-    public static GoogleSpreadsheetBuilder create(String name, java.io.File templateFile, GoogleSpreadsheets spreadsheets) throws FileNotFoundException {
-        return create(name, new FileInputStream(templateFile), spreadsheets);
-    }
-
-    public static GoogleSpreadsheetBuilder create(String name, InputStream template, HttpRequestInitializer credentials) {
-        return create(name, template, GoogleSpreadsheets.create(credentials));
-    }
-
-    public static GoogleSpreadsheetBuilder create(String name, InputStream template, GoogleSpreadsheets spreadsheets) {
-        return new GoogleSpreadsheetBuilder(name, template, spreadsheets);
+    public static GoogleSpreadsheetBuilder.Builder builder(String name, GoogleSpreadsheets spreadsheets) {
+        return new Builder(name, spreadsheets);
     }
 
     private final String name;
@@ -54,7 +87,8 @@ public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
     private String webLink;
     private String id;
 
-    private GoogleSpreadsheetBuilder(String name, InputStream template, GoogleSpreadsheets spreadsheets) {
+    private GoogleSpreadsheetBuilder(String id, String name, InputStream template, GoogleSpreadsheets spreadsheets) {
+        this.id = id;
         this.name = name;
         this.template = template;
         this.spreadsheets = spreadsheets;
@@ -70,10 +104,10 @@ public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
 
     private File buildInternal(Consumer<WorkbookDefinition> workbookDefinition) {
         if (template == null) {
-            return spreadsheets.uploadAndConvert(name, out -> PoiSpreadsheetBuilder.create(out).build(workbookDefinition));
+            return spreadsheets.updateAndConvert(id, name, out -> PoiSpreadsheetBuilder.create(out).build(workbookDefinition));
         }
 
-        return spreadsheets.uploadAndConvert(name, out -> {
+        return spreadsheets.updateAndConvert(id, name, out -> {
             try {
                 PoiSpreadsheetBuilder.create(out, template).build(workbookDefinition);
             } catch (IOException e) {

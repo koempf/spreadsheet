@@ -35,7 +35,7 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
     private static final String FILENAME = 'DELETE ME'
 
     HttpRequestInitializer credentials = buildCredentials(GOOGLE_SECRETS)
-    GoogleSpreadsheetBuilder builder = GoogleSpreadsheetBuilder.create(FILENAME, credentials)
+    GoogleSpreadsheetBuilder builder = GoogleSpreadsheetBuilder.builder(FILENAME, credentials).build()
 
     @SuppressWarnings('UnnecessaryGetter')
     void cleanup() {

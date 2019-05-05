@@ -6,7 +6,6 @@ import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria;
 import builders.dsl.spreadsheet.query.api.SpreadsheetCriteriaResult;
 import builders.dsl.spreadsheet.query.api.WorkbookCriterion;
 
-import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.function.Consumer;
 

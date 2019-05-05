@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 class DefaultGoogleSpreadsheets implements GoogleSpreadsheets {
 
@@ -30,7 +32,7 @@ class DefaultGoogleSpreadsheets implements GoogleSpreadsheets {
     }
 
     @Override
-    public File uploadAndConvert(final String name, final String fields, final Consumer<OutputStream> withOutputStream) {
+    public File updateAndConvert(final String id, final String name, final Iterable<String> fields, final Consumer<OutputStream> withOutputStream) {
         try {
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -45,9 +47,15 @@ class DefaultGoogleSpreadsheets implements GoogleSpreadsheets {
             googleFile.setName(name);
             googleFile.setMimeType(GOOGLE_SHEET_MIME_TYPE);
 
-            final Drive.Files.Create create = service.files().create(googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
+            String fieldsString = StreamSupport.stream(fields.spliterator(), false).collect(Collectors.joining(","));
 
-            return create.setFields(fields).execute();
+            if (id == null) {
+                final Drive.Files.Create create = service.files().create(googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
+                return create.setFields(fieldsString).execute();
+            }
+
+            final Drive.Files.Update create = service.files().update(id, googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
+            return create.setFields(fieldsString).execute();
         } catch (GeneralSecurityException | IOException e) {
             throw new IllegalStateException("Exception while uploading spreadsheet " + name, e);
         }
