@@ -3,83 +3,83 @@ package builders.dsl.spreadsheet.builder.google;
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
 import builders.dsl.spreadsheet.builder.api.WorkbookDefinition;
 import builders.dsl.spreadsheet.builder.poi.PoiSpreadsheetBuilder;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.ByteArrayContent;
+import builders.dsl.spreadsheet.google.GoogleSpreadsheets;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 
-import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.io.InputStream;
 import java.util.function.Consumer;
 
 public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
 
     public static GoogleSpreadsheetBuilder create(String name, HttpRequestInitializer credentials) {
-        return new GoogleSpreadsheetBuilder(name, credentials);
+        return create(name, (InputStream) null, GoogleSpreadsheets.create(credentials));
     }
 
-    private static final String APPLICATION_NAME = "Google Spreadsheet Builder";
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String EXCEL_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    private static final String GOOGLE_SHEET_MIME_TYPE = "application/vnd.google-apps.spreadsheet";
+    public static GoogleSpreadsheetBuilder create(String name, GoogleSpreadsheets spreadsheets) {
+        return create(name, (InputStream) null, spreadsheets);
+    }
+
+    public static GoogleSpreadsheetBuilder create(String name, String spreadsheetTemplateId, HttpRequestInitializer credentials) {
+        return create(name, spreadsheetTemplateId, GoogleSpreadsheets.create(credentials));
+    }
+
+    public static GoogleSpreadsheetBuilder create(String name, String spreadsheetTemplateId, GoogleSpreadsheets spreadsheets) {
+        return create(name, spreadsheets.convertAndDownload(spreadsheetTemplateId), spreadsheets);
+    }
+
+    public static GoogleSpreadsheetBuilder create(String name, java.io.File templateFile, HttpRequestInitializer credentials) throws FileNotFoundException {
+        return create(name, templateFile, GoogleSpreadsheets.create(credentials));
+    }
+
+    public static GoogleSpreadsheetBuilder create(String name, java.io.File templateFile, GoogleSpreadsheets spreadsheets) throws FileNotFoundException {
+        return create(name, new FileInputStream(templateFile), spreadsheets);
+    }
+
+    public static GoogleSpreadsheetBuilder create(String name, InputStream template, HttpRequestInitializer credentials) {
+        return create(name, template, GoogleSpreadsheets.create(credentials));
+    }
+
+    public static GoogleSpreadsheetBuilder create(String name, InputStream template, GoogleSpreadsheets spreadsheets) {
+        return new GoogleSpreadsheetBuilder(name, template, spreadsheets);
+    }
 
     private final String name;
-    private final HttpRequestInitializer credentials;
+    private final GoogleSpreadsheets spreadsheets;
+    private final InputStream template;
 
     private String webLink;
     private String id;
 
-    private GoogleSpreadsheetBuilder(String name, HttpRequestInitializer credentials) {
+    private GoogleSpreadsheetBuilder(String name, InputStream template, GoogleSpreadsheets spreadsheets) {
         this.name = name;
-        this.credentials = credentials;
+        this.template = template;
+        this.spreadsheets = spreadsheets;
     }
 
     @Override
     public void build(Consumer<WorkbookDefinition> workbookDefinition) {
-        try {
-            upload(workbookDefinition);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalStateException("Exception uploading spreadsheet", e);
-        }
+        File file = buildInternal(workbookDefinition);
+
+        this.webLink = file.getWebViewLink();
+        this.id = file.getId();
     }
 
-    /**
-     * Creates an Excel file and uploads it to Google Drive.
-     *
-     * @param workbookDefinition the definition of the spreadsheet
-     *
-     * @return web view link of the newly created file
-     */
-    public String upload(Consumer<WorkbookDefinition> workbookDefinition) throws GeneralSecurityException, IOException {
-        final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+    private File buildInternal(Consumer<WorkbookDefinition> workbookDefinition) {
+        if (template == null) {
+            return spreadsheets.uploadAndConvert(name, out -> PoiSpreadsheetBuilder.create(out).build(workbookDefinition));
+        }
 
-        Drive service = new Drive.Builder(httpTransport, JSON_FACTORY, credentials)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-
-        File googleFile = new File();
-        googleFile.setName(name);
-        googleFile.setMimeType(GOOGLE_SHEET_MIME_TYPE);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        SpreadsheetBuilder builder = PoiSpreadsheetBuilder.create(out);
-
-        builder.build(workbookDefinition);
-
-        Drive.Files.Create create = service.files().create(googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
-
-        File created = create.setFields("webViewLink,id").execute();
-
-        id = created.getId();
-        webLink = created.getWebViewLink();
-
-        return webLink;
+        return spreadsheets.uploadAndConvert(name, out -> {
+            try {
+                PoiSpreadsheetBuilder.create(out, template).build(workbookDefinition);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Problem reading file's template from " + template, e);
+            }
+        });
     }
 
     /**

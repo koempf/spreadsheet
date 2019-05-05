@@ -1,41 +1,30 @@
 package builders.dsl.spreadsheet.query.google;
 
+import builders.dsl.spreadsheet.google.GoogleSpreadsheets;
 import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria;
 import builders.dsl.spreadsheet.query.poi.PoiSpreadsheetCriteria;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 public class GoogleSpreadsheetCriteriaFactory {
 
-    public static GoogleSpreadsheetCriteriaFactory create(String spreadsheetId, HttpRequestInitializer credentials) {
-        return new GoogleSpreadsheetCriteriaFactory(spreadsheetId, credentials);
+    public static GoogleSpreadsheetCriteriaFactory create(String spreadsheetId, GoogleSpreadsheets spreadsheets) {
+        return create(spreadsheetId, spreadsheets);
     }
 
-    private static final String APPLICATION_NAME = "Google Spreadsheet Criteria";
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String EXCEL_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public static GoogleSpreadsheetCriteriaFactory create(String spreadsheetId, HttpRequestInitializer credentials) {
+        return new GoogleSpreadsheetCriteriaFactory(spreadsheetId, GoogleSpreadsheets.create(credentials));
+    }
 
     private final String id;
-    private final HttpRequestInitializer credentials;
+    private final GoogleSpreadsheets spreadsheets;
 
-    private GoogleSpreadsheetCriteriaFactory(String id, HttpRequestInitializer credentials) {
+    private GoogleSpreadsheetCriteriaFactory(String id, GoogleSpreadsheets spreadsheets) {
         this.id = id;
-        this.credentials = credentials;
+        this.spreadsheets = spreadsheets;
     }
 
-    public SpreadsheetCriteria criteria() throws GeneralSecurityException, IOException {
-        Drive service = new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credentials)
-                .setApplicationName(APPLICATION_NAME)
-                .build();
-
-        Drive.Files.Export export = service.files().export(id, EXCEL_MIME_TYPE);
-        return PoiSpreadsheetCriteria.FACTORY.forStream(export.executeMediaAsInputStream());
+    public SpreadsheetCriteria criteria() {
+        return PoiSpreadsheetCriteria.FACTORY.forStream(spreadsheets.convertAndDownload(id));
     }
 
 }
