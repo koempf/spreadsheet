@@ -1,6 +1,7 @@
 package builders.dsl.spreadsheet.google;
 
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 
 import java.io.InputStream;
@@ -31,5 +32,7 @@ public interface GoogleSpreadsheets {
     File updateAndConvert(String id, final String name, final Iterable<String> fields, final Consumer<OutputStream> withOutputStream);
 
     InputStream convertAndDownload(final String id);
+
+    Drive drive();
 
 }

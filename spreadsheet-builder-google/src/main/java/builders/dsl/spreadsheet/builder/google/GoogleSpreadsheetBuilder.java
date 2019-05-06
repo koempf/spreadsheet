@@ -28,12 +28,21 @@ public class GoogleSpreadsheetBuilder implements SpreadsheetBuilder {
         }
 
         /**
+         * Replace the spreadsheet of given ID instead of creating a new document using the original file as a template.
+         * @param spreadsheetID id of the document
+         * @return self
+         */
+        public Builder update(String spreadsheetID) {
+            return id(spreadsheetID).template(spreadsheetID);
+        }
+
+        /**
          * Replace the spreadsheet of given ID instead of creating a new document.
          * @param spreadsheetID id of the document
          * @return self
          */
         public Builder id(String spreadsheetID) {
-            this.id = id;
+            this.id = spreadsheetID;
             return this;
         }
 

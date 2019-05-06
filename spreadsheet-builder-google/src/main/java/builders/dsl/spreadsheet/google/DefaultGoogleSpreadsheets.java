@@ -3,7 +3,6 @@ package builders.dsl.spreadsheet.google;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
@@ -38,11 +37,6 @@ class DefaultGoogleSpreadsheets implements GoogleSpreadsheets {
 
             withOutputStream.accept(out);
 
-            final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-            final Drive service = new Drive.Builder(httpTransport, JSON_FACTORY, credentials)
-                    .setApplicationName(APPLICATION_NAME)
-                    .build();
-
             final File googleFile = new File();
             googleFile.setName(name);
             googleFile.setMimeType(GOOGLE_SHEET_MIME_TYPE);
@@ -50,13 +44,13 @@ class DefaultGoogleSpreadsheets implements GoogleSpreadsheets {
             String fieldsString = StreamSupport.stream(fields.spliterator(), false).collect(Collectors.joining(","));
 
             if (id == null) {
-                final Drive.Files.Create create = service.files().create(googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
+                final Drive.Files.Create create = drive().files().create(googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
                 return create.setFields(fieldsString).execute();
             }
 
-            final Drive.Files.Update create = service.files().update(id, googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
+            final Drive.Files.Update create = drive().files().update(id, googleFile, new ByteArrayContent(EXCEL_MIME_TYPE, out.toByteArray()));
             return create.setFields(fieldsString).execute();
-        } catch (GeneralSecurityException | IOException e) {
+        } catch (IOException e) {
             throw new IllegalStateException("Exception while uploading spreadsheet " + name, e);
         }
     }
@@ -64,14 +58,21 @@ class DefaultGoogleSpreadsheets implements GoogleSpreadsheets {
     @Override
     public InputStream convertAndDownload(final String id) {
         try {
-            Drive service = new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credentials)
+            Drive.Files.Export export = drive().files().export(id, EXCEL_MIME_TYPE);
+            return export.executeMediaAsInputStream();
+        } catch (IOException e) {
+            throw new IllegalStateException("Exception while downloading spreadsheet " + id, e);
+        }
+    }
+
+    @Override
+    public Drive drive() {
+        try {
+            return new Drive.Builder(GoogleNetHttpTransport.newTrustedTransport(), JSON_FACTORY, credentials)
                     .setApplicationName(APPLICATION_NAME)
                     .build();
-
-            Drive.Files.Export export = service.files().export(id, EXCEL_MIME_TYPE);
-            return export.executeMediaAsInputStream();
         } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalStateException("Exception while downloading spreadsheet " + id, e);
+            throw new IllegalStateException("Exception creating drive client", e);
         }
     }
 }
