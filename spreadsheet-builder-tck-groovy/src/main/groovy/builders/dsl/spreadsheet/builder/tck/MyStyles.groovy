@@ -3,8 +3,9 @@ package builders.dsl.spreadsheet.builder.tck
 import builders.dsl.spreadsheet.builder.api.CanDefineStyle
 import builders.dsl.spreadsheet.builder.api.Stylesheet
 
-import static builders.dsl.spreadsheet.api.Color.*
-
+@SuppressWarnings([
+        'DuplicateStringLiteral'
+])
 class MyStyles implements Stylesheet {
 
     void declareStyles(CanDefineStyle stylable) {
@@ -22,4 +23,5 @@ class MyStyles implements Stylesheet {
             }
         }
     }
+
 }

@@ -13,12 +13,12 @@ public interface Cell extends Spannable {
     CellStyle getStyle();
 
     Cell getAbove();
-    Cell getBellow();
+    Cell getBelow();
     Cell getLeft();
     Cell getRight();
     Cell getAboveLeft();
     Cell getAboveRight();
-    Cell getBellowLeft();
-    Cell getBellowRight();
+    Cell getBelowLeft();
+    Cell getBelowRight();
 
 }

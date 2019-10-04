@@ -1,7 +1,7 @@
 package builders.dsl.spreadsheet.builder.poi;
 
 import builders.dsl.spreadsheet.impl.AbstractPendingLink;
-import org.apache.poi.common.usermodel.Hyperlink;
+import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.xssf.usermodel.XSSFHyperlink;
 import org.apache.poi.xssf.usermodel.XSSFName;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,7 +24,7 @@ class PoiPendingLink extends AbstractPendingLink {
         }
 
 
-        XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(Hyperlink.LINK_DOCUMENT);
+        XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.DOCUMENT);
         link.setAddress(xssfName.getRefersToFormula());
 
         getPoiCell().getCell().setHyperlink(link);

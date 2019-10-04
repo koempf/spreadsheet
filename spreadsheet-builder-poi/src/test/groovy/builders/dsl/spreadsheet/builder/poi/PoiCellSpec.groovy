@@ -7,7 +7,7 @@ import spock.lang.Unroll
 class PoiCellSpec extends Specification {
 
     @Unroll
-    def "normalize name #name to #result"() {
+    void "normalize name #name to #result"() {
         expect:
             Utils.fixName(name) == result
 

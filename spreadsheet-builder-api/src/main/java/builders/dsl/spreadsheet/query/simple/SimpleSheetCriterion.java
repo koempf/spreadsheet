@@ -1,21 +1,21 @@
 package builders.dsl.spreadsheet.query.simple;
 
-import builders.dsl.spreadsheet.api.Configurer;
 import builders.dsl.spreadsheet.api.Keywords;
 import builders.dsl.spreadsheet.api.Row;
 import builders.dsl.spreadsheet.api.Sheet;
 import builders.dsl.spreadsheet.query.api.PageCriterion;
-import builders.dsl.spreadsheet.query.api.Predicate;
+import java.util.function.Predicate;
 import builders.dsl.spreadsheet.query.api.RowCriterion;
 import builders.dsl.spreadsheet.query.api.SheetCriterion;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 final class SimpleSheetCriterion extends AbstractCriterion<Row, SheetCriterion> implements SheetCriterion {
 
-    private final Collection<SimpleRowCriterion> criteria = new ArrayList<SimpleRowCriterion>();
+    private final Collection<SimpleRowCriterion> criteria = new ArrayList<>();
     private final SimpleWorkbookCriterion parent;
 
     SimpleSheetCriterion(SimpleWorkbookCriterion parent) {
@@ -28,40 +28,35 @@ final class SimpleSheetCriterion extends AbstractCriterion<Row, SheetCriterion> 
     }
 
     @Override
-    public SimpleSheetCriterion row(Configurer<RowCriterion> rowCriterion) {
+    public SimpleSheetCriterion row(Consumer<RowCriterion> rowCriterion) {
         SimpleRowCriterion criterion = new SimpleRowCriterion(this);
-        Configurer.Runner.doConfigure(rowCriterion, criterion);
+        rowCriterion.accept(criterion);
         criteria.add(criterion);
         return this;
     }
 
     @Override
-    public SimpleSheetCriterion row(int row, Configurer<RowCriterion> rowCriterion) {
+    public SimpleSheetCriterion row(int row, Consumer<RowCriterion> rowCriterion) {
         row(row);
         row(rowCriterion);
         return this;
     }
 
     @Override
-    public SimpleSheetCriterion page(Configurer<PageCriterion> pageCriterion) {
+    public SimpleSheetCriterion page(Consumer<PageCriterion> pageCriterion) {
         SimplePageCriterion criterion = new SimplePageCriterion(parent);
-        Configurer.Runner.doConfigure(pageCriterion, criterion);
+        pageCriterion.accept(criterion);
         return this;
     }
 
     @Override
     public SimpleSheetCriterion row(final int row) {
-        addCondition(new Predicate<Row>() {
-            @Override
-            public boolean test(Row o) {
-                return o.getNumber() == row;
-            }
-        });
+        addCondition(o -> o.getNumber() == row);
         return this;
     }
 
     @Override
-    public SimpleSheetCriterion or(Configurer<SheetCriterion> sheetCriterion) {
+    public SimpleSheetCriterion or(Consumer<SheetCriterion> sheetCriterion) {
         return (SimpleSheetCriterion) super.or(sheetCriterion);
     }
 
@@ -73,17 +68,12 @@ final class SimpleSheetCriterion extends AbstractCriterion<Row, SheetCriterion> 
 
     @Override
     public SheetCriterion row(final int from, final int to) {
-        addCondition(new Predicate<Row>() {
-            @Override
-            public boolean test(Row o) {
-                return o.getNumber() >= from && o.getNumber() <= to;
-            }
-        });
+        addCondition(o -> o.getNumber() >= from && o.getNumber() <= to);
         return this;
     }
 
     @Override
-    public SheetCriterion row(int from, int to, Configurer<RowCriterion> rowCriterion) {
+    public SheetCriterion row(int from, int to, Consumer<RowCriterion> rowCriterion) {
         return null;
     }
 
@@ -100,36 +90,16 @@ final class SimpleSheetCriterion extends AbstractCriterion<Row, SheetCriterion> 
     public SheetCriterion state(Keywords.SheetState state) {
         switch (state) {
             case LOCKED:
-                parent.addCondition(new Predicate<Sheet>() {
-                    @Override
-                    public boolean test(Sheet o) {
-                        return o.isLocked();
-                    }
-                });
+                parent.addCondition(Sheet::isLocked);
                 return this;
             case VISIBLE:
-                parent.addCondition(new Predicate<Sheet>() {
-                    @Override
-                    public boolean test(Sheet o) {
-                        return o.isVisible();
-                    }
-                });
+                parent.addCondition(Sheet::isVisible);
                 return this;
             case HIDDEN:
-                parent.addCondition(new Predicate<Sheet>() {
-                    @Override
-                    public boolean test(Sheet o) {
-                        return o.isHidden();
-                    }
-                });
+                parent.addCondition(Sheet::isHidden);
                 return this;
             case VERY_HIDDEN:
-                parent.addCondition(new Predicate<Sheet>() {
-                    @Override
-                    public boolean test(Sheet o) {
-                        return o.isVeryHidden();
-                    }
-                });
+                parent.addCondition(Sheet::isVeryHidden);
                 return this;
         }
         throw new IllegalStateException("Unknown sheet state: " + state);

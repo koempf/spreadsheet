@@ -76,12 +76,12 @@ public final class DataRow implements Row {
     }
 
     @Override
-    public Row getBellow() {
-        return row.getBellow();
+    public Row getBelow() {
+        return row.getBelow();
     }
 
     @Override
-    public Row getBellow(int howMany) {
-        return row.getBellow(howMany);
+    public Row getBelow(int howMany) {
+        return row.getBelow(howMany);
     }
 }

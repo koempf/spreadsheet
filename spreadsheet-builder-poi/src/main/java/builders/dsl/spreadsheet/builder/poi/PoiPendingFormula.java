@@ -1,6 +1,6 @@
 package builders.dsl.spreadsheet.builder.poi;
 
-import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFName;
 import builders.dsl.spreadsheet.impl.AbstractPendingFormula;
 import builders.dsl.spreadsheet.impl.Utils;
@@ -17,7 +17,7 @@ class PoiPendingFormula extends AbstractPendingFormula {
 
     protected void doResolve(String expandedFormula) {
         getPoiCell().getCell().setCellFormula(expandedFormula);
-        getPoiCell().getCell().setCellType(Cell.CELL_TYPE_FORMULA);
+        getPoiCell().getCell().setCellType(CellType.FORMULA);
     }
 
 
