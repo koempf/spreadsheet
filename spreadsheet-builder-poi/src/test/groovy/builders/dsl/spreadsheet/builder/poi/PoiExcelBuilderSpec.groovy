@@ -45,8 +45,9 @@ class PoiExcelBuilderSpec extends AbstractBuilderSpec {
                 Desktop.desktop.open(file)
                 Thread.sleep(10000)
             }
-        } catch(ignored) {
+        } catch (ignored) {
             // CI
         }
     }
+
 }

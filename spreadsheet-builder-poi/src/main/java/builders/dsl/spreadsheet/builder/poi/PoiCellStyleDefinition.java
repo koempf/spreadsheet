@@ -6,9 +6,7 @@ import builders.dsl.spreadsheet.impl.AbstractCellStyleDefinition;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.*;
 import builders.dsl.spreadsheet.api.ForegroundFill;
 import builders.dsl.spreadsheet.impl.AbstractBorderDefinition;
 import builders.dsl.spreadsheet.impl.AbstractCellDefinition;
@@ -17,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class PoiCellStyleDefinition extends AbstractCellStyleDefinition {
+
+    private static final DefaultIndexedColorMap INDEXED_COLOR_MAP = new DefaultIndexedColorMap();
 
     PoiCellStyleDefinition(PoiCellDefinition cell) {
         super(cell.getRow().getSheet().getWorkbook());
@@ -59,55 +59,55 @@ class PoiCellStyleDefinition extends AbstractCellStyleDefinition {
     protected void doFill(ForegroundFill fill) {
         switch (fill) {
             case NO_FILL:
-                style.setFillPattern(CellStyle.NO_FILL);
+                style.setFillPattern(FillPatternType.NO_FILL);
                 break;
             case SOLID_FOREGROUND:
-                style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+                style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
                 break;
             case FINE_DOTS:
-                style.setFillPattern(CellStyle.FINE_DOTS);
+                style.setFillPattern(FillPatternType.FINE_DOTS);
                 break;
             case ALT_BARS:
-                style.setFillPattern(CellStyle.ALT_BARS);
+                style.setFillPattern(FillPatternType.ALT_BARS);
                 break;
             case SPARSE_DOTS:
-                style.setFillPattern(CellStyle.SPARSE_DOTS);
+                style.setFillPattern(FillPatternType.SPARSE_DOTS);
                 break;
             case THICK_HORZ_BANDS:
-                style.setFillPattern(CellStyle.THICK_HORZ_BANDS);
+                style.setFillPattern(FillPatternType.THICK_HORZ_BANDS);
                 break;
             case THICK_VERT_BANDS:
-                style.setFillPattern(CellStyle.THICK_VERT_BANDS);
+                style.setFillPattern(FillPatternType.THICK_VERT_BANDS);
                 break;
             case THICK_BACKWARD_DIAG:
-                style.setFillPattern(CellStyle.THICK_BACKWARD_DIAG);
+                style.setFillPattern(FillPatternType.THICK_BACKWARD_DIAG);
                 break;
             case THICK_FORWARD_DIAG:
-                style.setFillPattern(CellStyle.THICK_FORWARD_DIAG);
+                style.setFillPattern(FillPatternType.THICK_FORWARD_DIAG);
                 break;
             case BIG_SPOTS:
-                style.setFillPattern(CellStyle.BIG_SPOTS);
+                style.setFillPattern(FillPatternType.BIG_SPOTS);
                 break;
             case BRICKS:
-                style.setFillPattern(CellStyle.BRICKS);
+                style.setFillPattern(FillPatternType.BRICKS);
                 break;
             case THIN_HORZ_BANDS:
-                style.setFillPattern(CellStyle.THIN_HORZ_BANDS);
+                style.setFillPattern(FillPatternType.THIN_HORZ_BANDS);
                 break;
             case THIN_VERT_BANDS:
-                style.setFillPattern(CellStyle.THIN_VERT_BANDS);
+                style.setFillPattern(FillPatternType.THIN_VERT_BANDS);
                 break;
             case THIN_BACKWARD_DIAG:
-                style.setFillPattern(CellStyle.THIN_BACKWARD_DIAG);
+                style.setFillPattern(FillPatternType.THIN_BACKWARD_DIAG);
                 break;
             case THIN_FORWARD_DIAG:
-                style.setFillPattern(CellStyle.THIN_FORWARD_DIAG);
+                style.setFillPattern(FillPatternType.THIN_FORWARD_DIAG);
                 break;
             case SQUARES:
-                style.setFillPattern(CellStyle.SQUARES);
+                style.setFillPattern(FillPatternType.SQUARES);
                 break;
             case DIAMONDS:
-                style.setFillPattern(CellStyle.DIAMONDS);
+                style.setFillPattern(FillPatternType.DIAMONDS);
                 break;
         }
     }
@@ -206,18 +206,18 @@ class PoiCellStyleDefinition extends AbstractCellStyleDefinition {
         byte green = (byte) Integer.parseInt(match.group(2), 16);
         byte blue = (byte) Integer.parseInt(match.group(3), 16);
 
-        return new XSSFColor(new byte[]{red, green, blue});
+        return new XSSFColor(new byte[]{red, green, blue}, INDEXED_COLOR_MAP);
     }
 
     void setBorderTo(CellRangeAddress address, PoiSheetDefinition sheet) {
-        RegionUtil.setBorderBottom(style.getBorderBottom(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setBorderLeft(style.getBorderLeft(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setBorderRight(style.getBorderRight(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setBorderTop(style.getBorderTop(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setBottomBorderColor(style.getBottomBorderColor(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setLeftBorderColor(style.getLeftBorderColor(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setRightBorderColor(style.getRightBorderColor(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
-        RegionUtil.setTopBorderColor(style.getTopBorderColor(), address, sheet.getSheet(), sheet.getSheet().getWorkbook());
+        RegionUtil.setBorderBottom(style.getBorderBottom(), address, sheet.getSheet());
+        RegionUtil.setBorderLeft(style.getBorderLeft(), address, sheet.getSheet());
+        RegionUtil.setBorderRight(style.getBorderRight(), address, sheet.getSheet());
+        RegionUtil.setBorderTop(style.getBorderTop(), address, sheet.getSheet());
+        RegionUtil.setBottomBorderColor(style.getBottomBorderColor(), address, sheet.getSheet());
+        RegionUtil.setLeftBorderColor(style.getLeftBorderColor(), address, sheet.getSheet());
+        RegionUtil.setRightBorderColor(style.getRightBorderColor(), address, sheet.getSheet());
+        RegionUtil.setTopBorderColor(style.getTopBorderColor(), address, sheet.getSheet());
     }
 
     private final XSSFCellStyle style;

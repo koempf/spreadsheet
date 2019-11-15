@@ -20,7 +20,12 @@ repositories {
 }
 
 dependencies {
+    // Excel
     compile 'builders.dsl:spreadsheet-builder-poi:{version}'
+
+    // or Google Spreadsheet
+    compile 'builders.dsl:spreadsheet-builder-google:{version}'
+
     // for groovy support
     compile 'builders.dsl:spreadsheet-builder-groovy:{version}'
 }
@@ -30,9 +35,17 @@ dependencies {
 [source,xml,indent=0,role="secondary",subs='verbatim,attributes']
 .Maven
 ----
+<!-- Excel -->
 <dependency>
   <groupId>builders.dsl</groupId>
   <artifactId>spreadsheet-builder-poi</artifactId>
+  <version>{version}</version>
+  <type>pom</type>
+</dependency>
+<!-- Google Spreadsheet-->
+<dependency>
+  <groupId>builders.dsl</groupId>
+  <artifactId>spreadsheet-builder-google</artifactId>
   <version>{version}</version>
   <type>pom</type>
 </dependency>
@@ -3477,7 +3490,7 @@ The `query` method returns collections of every cell found matching given criter
 
 The `Cell` objects provides getters counterparts to methods supported by query such as `getName()`. You can also
 easily navigate into all eight directions with methods like `getLeft()`, `getAboveLeft()` etc.  or access the whole
-row with `getRow()`. Rows can be also easily navigated with `getAbove()` and `getbellow` methods.
+row with `getRow()`. Rows can be also easily navigated with `getAbove()` and `getBelow()` methods.
 
 [source,indent=0,role="primary"]
 .Groovy
@@ -3493,7 +3506,7 @@ Cell a = query.find {
 }
 
 assert a.right.value == 'B'
-assert a.row.bellow.cells.first().value == a.bellow.value
+assert a.row.below.cells.first().value == a.below.value
 ----
 
 [source,java,indent=0,role="secondary"]
@@ -3510,7 +3523,7 @@ Cell a = query.find(w -> {
 });
 
 assert a.right.value == 'B'
-assert a.row.bellow.cells.first().value == a.bellow.value
+assert a.row.below.cells.first().value == a.below.value
 ----
 
 == Sheets and Rows
@@ -3996,12 +4009,19 @@ The color you usually see in the cell is `foreground` not a `background` as you 
 
 = Changelog
 
+== 2.0.0
+Added indirect support for Google Spreadsheet.
+=== Breaking Changes
+* changed closure's owner handling so the `owner` is always the `owmner` of top level closure
+* renamed occurrences if `below` to `below`
+* upgraded POI libraries to 4.1.0 and OOXML 1.4
+
 == 1.0.5
-Fixed problem with fetching cells `above` or `bellow` when cell list in the row.
+Fixed problem with fetching cells `above` or `below` when cell list in the row.
 
 == 1.0.4
 
-Fixed problem with fetching cells `above` or `bellow` when cell list in the row is not initialized yet.
+Fixed problem with fetching cells `above` or `below` when cell list in the row is not initialized yet.
 
 == 1.0.3
 

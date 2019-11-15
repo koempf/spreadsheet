@@ -9,6 +9,8 @@ import org.apache.poi.xssf.usermodel.*;
 
 import java.util.*;
 
+import static org.apache.poi.ss.usermodel.CellType.*;
+
 class PoiCellDefinition extends AbstractCellDefinition {
     PoiCellDefinition(PoiRowDefinition row, XSSFCell xssfCell) {
         super(row);
@@ -26,35 +28,35 @@ class PoiCellDefinition extends AbstractCellDefinition {
     @Override
     public PoiCellDefinition value(Object value) {
         if (value == null) {
-            xssfCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BLANK);
+            xssfCell.setCellType(BLANK);
             return this;
         }
 
         if (value instanceof Number) {
-            xssfCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC);
+            xssfCell.setCellType(NUMERIC);
             xssfCell.setCellValue(((Number) value).doubleValue());
             return this;
         }
 
         if (value instanceof Date) {
-            xssfCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC);
+            xssfCell.setCellType(NUMERIC);
             xssfCell.setCellValue((Date) value);
             return this;
         }
 
         if (value instanceof Calendar) {
-            xssfCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_NUMERIC);
+            xssfCell.setCellType(NUMERIC);
             xssfCell.setCellValue((Calendar) value);
             return this;
         }
 
         if (value instanceof Boolean) {
-            xssfCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN);
+            xssfCell.setCellType(BOOLEAN);
             xssfCell.setCellValue((Boolean) value);
             return this;
         }
 
-        xssfCell.setCellType(org.apache.poi.ss.usermodel.Cell.CELL_TYPE_STRING);
+        xssfCell.setCellType(STRING);
         xssfCell.setCellValue(value.toString());
         return this;
     }

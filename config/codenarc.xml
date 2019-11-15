@@ -36,6 +36,7 @@
         <rule-config name="SpaceAroundMapEntryColon">
             <property name="characterAfterColonRegex" value="\s"/>
         </rule-config>
+        <exclude name="Indentation" />
     </ruleset-ref>
     <ruleset-ref path="rulesets/generic.xml"/>
     <ruleset-ref path="rulesets/grails.xml"/>
@@ -44,7 +45,14 @@
         <exclude name="MisorderedStaticImports"/>
     </ruleset-ref>
     <ruleset-ref path="rulesets/jdbc.xml"/>
-    <ruleset-ref path="rulesets/junit.xml"/>
+    <ruleset-ref path="rulesets/junit.xml">
+        <rule-config name="JUnitPublicNonTestMethod">
+            <property name="doNotApplyToClassNames" value="*Spec"/>
+        </rule-config>
+        <rule-config name="JUnitPublicProperty">
+            <property name="doNotApplyToClassNames" value="*Spec"/>
+        </rule-config>
+    </ruleset-ref>
     <ruleset-ref path="rulesets/logging.xml"/>
     <ruleset-ref path="rulesets/naming.xml">
         <rule-config name="FieldName">
@@ -62,6 +70,7 @@
     <ruleset-ref path="rulesets/size.xml"/>
     <ruleset-ref path="rulesets/unnecessary.xml">
         <exclude name="UnnecessaryPackageReference"/>
+        <exclude name="UnnecessaryReturnKeyword"/>
     </ruleset-ref>
     <ruleset-ref path="rulesets/unused.xml"/>
 

@@ -11,10 +11,14 @@ import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria
 import builders.dsl.spreadsheet.query.api.SpreadsheetCriteriaResult
 import spock.lang.Specification
 
+@SuppressWarnings([
+    'NestedBlockDepth',
+    'AbcMetric',
+    'NoJavaUtilDate',
+    'MethodSize',
+    'BuilderMethodWithSideEffects',
+])
 abstract class AbstractBuilderSpec extends Specification {
-
-    protected abstract SpreadsheetCriteria createCriteria()
-    protected abstract SpreadsheetBuilder createSpreadsheetBuilder()
 
     void 'create sample spreadsheet'() {
         when:
@@ -39,26 +43,25 @@ abstract class AbstractBuilderSpec extends Specification {
             int sheetCount = allCells.sheets.size()
             int rowsCount = allCells.rows.size()
         then:
-            allCellSize == 80130
+            allCellSize == expectedAllCellSize
             sheetCount == 21
-            rowsCount == 20065
+            rowsCount == expectedAllRowsSize
 
         when:
-            SpreadsheetCriteriaResult sampleCells = matcher.query({
+            SpreadsheetCriteriaResult sampleCells = matcher.query {
                 sheet('Sample')
-            })
+            }
         then:
             sampleCells
             sampleCells.size() == 2
             sampleCells.sheets.size() == 1
-            sampleCells.rows.size() == 1
 
         when:
-            Iterable<Cell> rowCells = matcher.query({
-                sheet("many rows") {
-                    row(1)
+            Iterable<Cell> rowCells = matcher.query {
+                sheet('many rows') {
+                    row 1
                 }
-            })
+            }
         then:
             rowCells
             rowCells.size() == 4
@@ -67,15 +70,17 @@ abstract class AbstractBuilderSpec extends Specification {
         when:
             Row manyRowsHeader = matcher.query {
                 sheet('many rows') {
-                    row(1)
-            }   }.row
+                    row 1
+                }
+            }.row
         then:
             manyRowsHeader
         when:
-            Row manyRowsDataRow= matcher.query {
+            Row manyRowsDataRow = matcher.query {
                 sheet('many rows') {
                     row(2)
-            }   }.row
+                }
+            }.row
             DataRow dataRow = DataRow.create(manyRowsDataRow, manyRowsHeader)
         then:
             dataRow['One']
@@ -88,7 +93,7 @@ abstract class AbstractBuilderSpec extends Specification {
             dataRowFromMapping['primo'].value == '1'
 
         when:
-            Iterable<Cell> someCells = matcher.query({
+            Iterable<Cell> someCells = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -96,13 +101,13 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             someCells
             someCells.size() == 1
 
         when:
-            Iterable<Cell> commentedCells = matcher.query({
+            Iterable<Cell> commentedCells = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -110,26 +115,13 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             commentedCells
             commentedCells.size() == 1
 
         when:
-            Iterable<Cell> namedCells = matcher.query({
-                sheet {
-                    row {
-                        cell {
-                            name "_Cell10"
-                        }
-                    }
-                }
-            })
-        then:
-            namedCells
-            namedCells.size() == 1
-        when:
-            Iterable<Cell> dateCells = matcher.query({
+            Iterable<Cell> dateCells = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -139,27 +131,12 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             dateCells
             dateCells.size() == 1
         when:
-            Iterable<Cell> filledCells = matcher.query({
-                sheet {
-                    row {
-                        cell {
-                            style {
-                                fill fineDots
-                            }
-                        }
-                    }
-                }
-            })
-        then:
-            filledCells
-            filledCells.size() == 1
-        when:
-            Iterable<Cell> magentaCells = matcher.query({
+            Iterable<Cell> magentaCells = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -169,12 +146,12 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             magentaCells
             magentaCells.size() == 1
         when:
-            Iterable<Cell> redOnes = matcher.query({
+            Iterable<Cell> redOnes = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -186,14 +163,14 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             redOnes
             redOnes.size() == 20006
             redOnes.rows.size() == 20004
 
         when:
-            Iterable<Cell> boldOnes = matcher.query({
+            Iterable<Cell> boldOnes = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -205,13 +182,13 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             boldOnes
             boldOnes.size() == 5
 
         when:
-            Iterable<Cell> bigOnes = matcher.query({
+            Iterable<Cell> bigOnes = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -223,14 +200,13 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             bigOnes
             bigOnes.size() == 40002
 
-
         when:
-            Iterable<Cell> bordered = matcher.query({
+            Iterable<Cell> bordered = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -242,12 +218,12 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             bordered
             bordered.size() == 10
         when:
-            Iterable<Cell> combined = matcher.query({
+            Iterable<Cell> combined = matcher.query {
                 sheet {
                     row {
                         cell {
@@ -260,14 +236,13 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             combined
             combined.size() == 1
 
-
         when:
-            Iterable<Cell> conjunction = matcher.query({
+            Iterable<Cell> conjunction = matcher.query {
                 sheet {
                     row {
                         or {
@@ -280,18 +255,21 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             conjunction
             conjunction.size() == 3
 
         when:
-            Iterable<Cell> traversal = matcher.query({
+            Iterable<Cell> traversal = matcher.query {
                 sheet('Traversal') {
                     row {
                         cell {
                             value 'E'
-            }   }   }   })
+                        }
+                    }
+                }
+            }
         then:
             traversal
             traversal.size() == 1
@@ -300,35 +278,35 @@ abstract class AbstractBuilderSpec extends Specification {
             Cell cellE = traversal.first()
         then:
             cellE.row.sheet.name == 'Traversal'
-            cellE.row.sheet.getPrevious()
-            cellE.row.sheet.getPrevious().name == 'Formula'
-            cellE.row.sheet.getNext()
-            cellE.row.sheet.getNext().name == 'Border'
+            cellE.row.sheet.previous
+            cellE.row.sheet.previous.name == 'Formula'
+            cellE.row.sheet.next
+            cellE.row.sheet.next.name == 'Border'
             cellE.row.number == 2
-            cellE.row.getAbove()
-            cellE.row.getAbove().number == 1
-            cellE.row.getBellow()
-            cellE.row.getBellow().number == 3
+            cellE.row.above
+            cellE.row.above.number == 1
+            cellE.row.below
+            cellE.row.below.number == 3
             cellE.colspan == 2
-            cellE.getAboveLeft()
-            cellE.getAboveLeft().value == 'A'
-            cellE.getAbove()
-            cellE.getAbove().value == 'B'
-            cellE.getAboveRight()
-            cellE.getAboveRight().value == 'C'
-            cellE.getLeft()
-            cellE.getLeft().value == 'D'
-            cellE.getRight()
-            cellE.getRight().value == 'F'
-            cellE.getBellowLeft()
-            cellE.getBellowLeft().value == 'G'
-            cellE.getBellowRight()
-            cellE.getBellowRight().value == 'I'
-            cellE.getBellow()
-            cellE.getBellow().value == 'H'
-            cellE.getBellow().getBellow().value == 'J'
+            cellE.aboveLeft
+            cellE.aboveLeft.value == 'A'
+            cellE.above
+            cellE.above.value == 'B'
+            cellE.aboveRight
+            cellE.aboveRight.value == 'C'
+            cellE.left
+            cellE.left.value == 'D'
+            cellE.right
+            cellE.right.value == 'F'
+            cellE.belowLeft
+            cellE.belowLeft.value == 'G'
+            cellE.belowRight
+            cellE.belowRight.value == 'I'
+            cellE.below
+            cellE.below.value == 'H'
+            cellE.below.below.value == 'J'
         when:
-            Iterable<Cell> zeroCells = matcher.query({
+            Iterable<Cell> zeroCells = matcher.query {
                 sheet('Zero') {
                     row {
                         cell {
@@ -336,7 +314,7 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                     }
                 }
-            })
+            }
         then:
             zeroCells
             zeroCells.size() == 1
@@ -373,6 +351,7 @@ abstract class AbstractBuilderSpec extends Specification {
             redCell?.style?.foreground == Color.red
             blueCell?.style?.foreground == Color.blue
             greenCell?.style?.foreground == Color.green
+
         expect:
             matcher.query {
                 sheet {
@@ -380,19 +359,64 @@ abstract class AbstractBuilderSpec extends Specification {
                         paper a5
                         orientation landscape
             }   }   }.size() == 1
+
+        and:
             matcher.query {
                 sheet('Hidden') {
                     state hidden
                 }
             }.sheets.size() == 1
-            matcher.query {
+
+        when:
+            Iterable<Cell> namedCells = matcher.query {
+                sheet('Formula') {
+                    row {
+                        cell {
+                            name '_Cell10'
+                        }
+                    }
+                }
+            }
+        then:
+            namedCells
+            namedCells.size() == 1
+
+        when:
+            Iterable<Cell> filledCells = matcher.query {
+                sheet {
+                    row {
+                        cell {
+                            style {
+                                fill fineDots
+                            }
+                        }
+                    }
+                }
+            }
+        then:
+            !isFillSupported() || filledCells
+            !isFillSupported() || filledCells.size() == 1
+
+        expect:
+            !isVeryHiddenSupported() || matcher.query {
                 sheet('Very hidden') {
                     state veryHidden
                 }
             }.sheets.size() == 1
     }
+    protected abstract SpreadsheetCriteria createCriteria()
+    protected abstract SpreadsheetBuilder createSpreadsheetBuilder()
 
-    protected void openSpreadsheet() {}
+    protected int getExpectedAllRowsSize() { 20065 }
+
+    protected int getExpectedAllCellSize() { 80130 }
+
+    @SuppressWarnings('EmptyMethodInAbstractClass')
+    protected void openSpreadsheet() { }
+
+    protected boolean isVeryHiddenSupported() { true }
+
+    protected boolean isFillSupported() { true }
 
     @CompileStatic
     private static void buildSpreadsheet(SpreadsheetBuilder builder, Date today) {
@@ -420,7 +444,7 @@ abstract class AbstractBuilderSpec extends Specification {
                 }
             }
 
-            style "borders", {
+            style 'borders', {
                 font {
                     color red
                 }
@@ -446,12 +470,11 @@ abstract class AbstractBuilderSpec extends Specification {
                 foreground blue
             }
 
-            style 'nonefg', {}
-
+            style 'nonefg', { }
 
             apply MyStyles // or apply(new MyStyles())
 
-            sheet("many rows") {
+            sheet('many rows') {
                 filter auto
                 row {
                     cell 'One'
@@ -554,7 +577,7 @@ abstract class AbstractBuilderSpec extends Specification {
                         text 'Red', {
                             color red
                             size 22
-                            name "Times New Roman"
+                            name 'Times New Roman'
                         }
                         text ' '
                         text 'Riding', {
@@ -566,7 +589,6 @@ abstract class AbstractBuilderSpec extends Specification {
                             style bold
                             size 22
                         }
-
                     }
                 }
                 row {
@@ -610,8 +632,8 @@ abstract class AbstractBuilderSpec extends Specification {
                         text '\n'
 
                         for (Map.Entry<String, String> entry in [
-                                FULL_WITHDRAWAL   : 'OPTION 2: FULL WITHDRAWAL: No further use',
-                                PARTIAL_WITHDRAWAL: 'OPTION 1: PARTIAL WITHDRAWAL: No further contact'
+                                FULL_WITHDRAWAL: 'OPTION 2: FULL WITHDRAWAL: No further use',
+                                PARTIAL_WITHDRAWAL: 'OPTION 1: PARTIAL WITHDRAWAL: No further contact',
                         ].entrySet()) {
                             text entry.key, {
                                 style bold
@@ -741,37 +763,37 @@ abstract class AbstractBuilderSpec extends Specification {
             }
             sheet('Groups') {
                 row {
-                    cell "Headline 1"
+                    cell 'Headline 1'
                     group {
                         cell {
-                            value "Headline 2"
+                            value 'Headline 2'
                             style {
                                 foreground aquamarine
                                 fill solidForeground
                             }
                         }
-                        cell "Headline 3"
+                        cell 'Headline 3'
                         collapse {
-                            cell "Headline 4"
-                            cell "Headline 5"
+                            cell 'Headline 4'
+                            cell 'Headline 5'
                         }
-                        cell "Headline 6"
+                        cell 'Headline 6'
                     }
                 }
                 group {
                     row {
-                        cell "Some stuff"
+                        cell 'Some stuff'
                     }
                     collapse {
                         row {
-                            cell "Something"
+                            cell 'Something'
                         }
                         row {
-                            cell "Something other"
+                            cell 'Something other'
                         }
                     }
                     row {
-                        cell "Other stuff"
+                        cell 'Other stuff'
                     }
                 }
             }
@@ -851,7 +873,7 @@ abstract class AbstractBuilderSpec extends Specification {
             }   }   }
             sheet('Border') {
                 row {
-                    style "borders"
+                    style 'borders'
                     cell {
                         value 1
                         colspan(2)
@@ -861,7 +883,7 @@ abstract class AbstractBuilderSpec extends Specification {
                     }
                 }
                 row {
-                    style "borders"
+                    style 'borders'
                     cell {
                         value 1
                         colspan(2)
@@ -869,7 +891,6 @@ abstract class AbstractBuilderSpec extends Specification {
                     cell {
                         value 2
                     }
-
                 }
             }
             sheet('Zero') {
