@@ -52,7 +52,7 @@ dependencies {
 ----
 
 = REST API
-New REST API available at `https://api.sheet.rest/v1`:
+New experimental REST API is available at `https://api.sheet.rest/v1`:
 
 [source,indent=0,role="primary"]
 .cURL
@@ -4010,11 +4010,12 @@ The color you usually see in the cell is `foreground` not a `background` as you 
 = Changelog
 
 == 2.0.0
-Added indirect support for Google Spreadsheet.
+Added indirect support for Google Spreadsheet (link:https://github.com/dsl-builders/spreadsheet/blob/master/spreadsheet-builder-google/src/test/groovy/builders/dsl/spreadsheet/google/GoogleBuilderSpec.groovy[see `GoogleBuilderSpec` for example])
+
 === Breaking Changes
 * changed closure's owner handling so the `owner` is always the `owmner` of top level closure
 * renamed occurrences if `below` to `below`
-* upgraded POI libraries to 4.1.0 and OOXML 1.4
+* upgraded POI libraries to 4.1.1 and OOXML 1.4
 
 == 1.0.5
 Fixed problem with fetching cells `above` or `below` when cell list in the row.
