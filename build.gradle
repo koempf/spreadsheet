@@ -29,10 +29,6 @@ dependencies {
 
 }
 
-String currentVersion = '2.0.0'
-
-version = currentVersion
-
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'checkstyle'
@@ -52,9 +48,6 @@ subprojects {
     dependencies {
         testCompile "org.spockframework:spock-core:$spockVersion"
     }
-
-    // don't forget to update version in CaseReportFormSerializer
-    version = currentVersion
 
     jar {
         manifest.attributes provider: 'gradle'
@@ -147,7 +140,7 @@ asciidoctor {
         }
     }
 
-    attributes 'docinfo1': ['version': currentVersion],
+    attributes 'docinfo1': ['version': project.version],
             'imagesdir': 'images',
             'source-highlighter': 'highlight.js',
             'stylesdir': 'css',
