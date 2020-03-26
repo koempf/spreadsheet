@@ -1,23 +1,23 @@
 package builders.dsl.spreadsheet.builder.poi;
 
-import org.apache.poi.ss.usermodel.FontUnderline;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import builders.dsl.spreadsheet.api.Color;
 import builders.dsl.spreadsheet.api.FontStyle;
 import builders.dsl.spreadsheet.builder.api.FontDefinition;
+import org.apache.poi.ss.usermodel.FontUnderline;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 
 import java.util.EnumSet;
 
 class PoiFontDefinition implements FontDefinition {
 
-    PoiFontDefinition(XSSFWorkbook workbook) {
-        font = workbook.createFont();
+    PoiFontDefinition(Workbook workbook) {
+        font = (XSSFFont) workbook.createFont();
     }
 
-    PoiFontDefinition(XSSFWorkbook workbook, XSSFCellStyle style) {
-        font = workbook.createFont();
+    PoiFontDefinition(Workbook workbook, XSSFCellStyle style) {
+        font = (XSSFFont) workbook.createFont();
         style.setFont(font);
     }
 
@@ -47,7 +47,7 @@ class PoiFontDefinition implements FontDefinition {
 
     @Override
     public PoiFontDefinition style(FontStyle first, FontStyle... other) {
-        EnumSet enumSet = EnumSet.of(first, other);
+        EnumSet<FontStyle> enumSet = EnumSet.of(first, other);
         if (enumSet.contains(FontStyle.ITALIC)){
             font.setItalic(true);
         }

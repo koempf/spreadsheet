@@ -1,22 +1,23 @@
 package builders.dsl.spreadsheet.builder.poi;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
+
 import builders.dsl.spreadsheet.builder.api.RowDefinition;
 import builders.dsl.spreadsheet.impl.AbstractCellDefinition;
 import builders.dsl.spreadsheet.impl.AbstractRowDefinition;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 class PoiRowDefinition extends AbstractRowDefinition implements RowDefinition {
 
-    private final XSSFRow xssfRow;
+    private final Row xssfRow;
 
-    PoiRowDefinition(PoiSheetDefinition sheet, XSSFRow xssfRow) {
+    PoiRowDefinition(PoiSheetDefinition sheet, Row xssfRow) {
         super(sheet);
         this.xssfRow = xssfRow;
     }
 
     @Override
     protected AbstractCellDefinition createCell(int zeroBasedCellNumber) {
-        XSSFCell cell = xssfRow.getCell(zeroBasedCellNumber);
+        Cell cell = xssfRow.getCell(zeroBasedCellNumber);
 
         if (cell == null) {
             cell = xssfRow.createCell(zeroBasedCellNumber);
@@ -46,7 +47,7 @@ class PoiRowDefinition extends AbstractRowDefinition implements RowDefinition {
         return (PoiSheetDefinition) sheet;
     }
 
-    protected XSSFRow getRow() {
+    protected Row getRow() {
         return xssfRow;
     }
 

@@ -1,30 +1,30 @@
 package builders.dsl.spreadsheet.builder.poi;
 
-import org.apache.poi.ss.usermodel.SheetVisibility;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import builders.dsl.spreadsheet.builder.api.PageDefinition;
 import builders.dsl.spreadsheet.builder.api.SheetDefinition;
 import builders.dsl.spreadsheet.impl.AbstractSheetDefinition;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetVisibility;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinition {
 
     private static final int WIDTH_ARROW_BUTTON = 2 * 255;
     public static final int MAX_COLUMN_WIDTH = 255 * 256;
 
-    private final XSSFSheet xssfSheet;
+    private final Sheet sheet;
 
-    PoiSheetDefinition(PoiWorkbookDefinition workbook, XSSFSheet xssfSheet) {
+    PoiSheetDefinition(PoiWorkbookDefinition workbook, Sheet sheet) {
         super(workbook);
-        this.xssfSheet = xssfSheet;
+        this.sheet = sheet;
     }
 
     @Override protected PoiRowDefinition createRow(int zeroBasedRowNumber) {
-        XSSFRow row = xssfSheet.getRow(zeroBasedRowNumber);
+        Row row = sheet.getRow(zeroBasedRowNumber);
 
         if (row == null) {
-            row = xssfSheet.createRow(zeroBasedRowNumber);
+            row = sheet.createRow(zeroBasedRowNumber);
         }
 
         return new PoiRowDefinition(this, row);
@@ -37,15 +37,15 @@ class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinit
 
     @Override
     protected void applyRowGroup(int startPosition, int endPosition, boolean collapsed) {
-        xssfSheet.groupRow(startPosition, endPosition);
+        sheet.groupRow(startPosition, endPosition);
         if (collapsed) {
-            xssfSheet.setRowGroupCollapsed(endPosition, true);
+            sheet.setRowGroupCollapsed(endPosition, true);
         }
     }
 
     @Override
     public String getName() {
-        return xssfSheet.getSheetName();
+        return sheet.getSheetName();
     }
 
     @Override
@@ -55,12 +55,12 @@ class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinit
 
     @Override
     protected void doFreeze(int column, int row) {
-        xssfSheet.createFreezePane(column, row);
+        sheet.createFreezePane(column, row);
     }
 
     @Override
     protected void doLock() {
-        xssfSheet.enableLocking();
+        getWorkbook().doLock(sheet);
     }
 
     @Override
@@ -69,7 +69,7 @@ class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinit
     }
 
     private void setVisibility(SheetVisibility visibility) {
-        xssfSheet.getWorkbook().setSheetVisibility(xssfSheet.getWorkbook().getSheetIndex(xssfSheet), visibility);
+        sheet.getWorkbook().setSheetVisibility(sheet.getWorkbook().getSheetIndex(sheet), visibility);
     }
 
     @Override
@@ -84,29 +84,29 @@ class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinit
 
     @Override
     protected void doPassword(String password) {
-        xssfSheet.protectSheet(password);
+        sheet.protectSheet(password);
     }
 
-    protected XSSFSheet getSheet() {
-        return xssfSheet;
+    protected Sheet getSheet() {
+        return sheet;
     }
 
     protected void processAutoColumns() {
         for (Integer index : autoColumns) {
-            xssfSheet.autoSizeColumn(index);
+            sheet.autoSizeColumn(index);
             if (automaticFilter) {
-                xssfSheet.setColumnWidth(index, Math.min(xssfSheet.getColumnWidth(index) + WIDTH_ARROW_BUTTON, MAX_COLUMN_WIDTH));
+                sheet.setColumnWidth(index, Math.min(sheet.getColumnWidth(index) + WIDTH_ARROW_BUTTON, MAX_COLUMN_WIDTH));
             }
         }
     }
 
     protected void processAutomaticFilter() {
-        if (automaticFilter && xssfSheet.getLastRowNum() > 0) {
-            xssfSheet.setAutoFilter(new CellRangeAddress(
-                    xssfSheet.getFirstRowNum(),
-                    xssfSheet.getLastRowNum(),
-                    xssfSheet.getRow(xssfSheet.getFirstRowNum()).getFirstCellNum(),
-                    xssfSheet.getRow(xssfSheet.getFirstRowNum()).getLastCellNum() - 1
+        if (automaticFilter && sheet.getLastRowNum() > 0) {
+            sheet.setAutoFilter(new CellRangeAddress(
+                    sheet.getFirstRowNum(),
+                    sheet.getLastRowNum(),
+                    sheet.getRow(sheet.getFirstRowNum()).getFirstCellNum(),
+                    sheet.getRow(sheet.getFirstRowNum()).getLastCellNum() - 1
             ));
         }
     }

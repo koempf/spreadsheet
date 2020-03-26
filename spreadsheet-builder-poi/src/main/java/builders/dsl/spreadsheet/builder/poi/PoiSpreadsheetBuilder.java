@@ -3,10 +3,12 @@ package builders.dsl.spreadsheet.builder.poi;
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
 import builders.dsl.spreadsheet.builder.api.WorkbookDefinition;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.util.function.Consumer;
 
 import java.io.*;
+import java.util.function.Consumer;
 
 public class PoiSpreadsheetBuilder implements SpreadsheetBuilder {
 
@@ -34,10 +36,34 @@ public class PoiSpreadsheetBuilder implements SpreadsheetBuilder {
         return new PoiSpreadsheetBuilder(new XSSFWorkbook(template), new FileOutputStream(file));
     }
 
-    private final XSSFWorkbook workbook;
+    public static SpreadsheetBuilder stream(OutputStream out) {
+        return new PoiSpreadsheetBuilder(new SXSSFWorkbook(), out);
+    }
+
+    public static SpreadsheetBuilder stream(File file) throws FileNotFoundException {
+        return new PoiSpreadsheetBuilder(new SXSSFWorkbook(), new FileOutputStream(file));
+    }
+
+    public static SpreadsheetBuilder stream(OutputStream out, InputStream template) throws IOException {
+        return new PoiSpreadsheetBuilder(new SXSSFWorkbook(new XSSFWorkbook(template)), out);
+    }
+
+    public static SpreadsheetBuilder stream(File file, InputStream template) throws IOException {
+        return new PoiSpreadsheetBuilder(new SXSSFWorkbook(new XSSFWorkbook(template)), new FileOutputStream(file));
+    }
+
+    public static SpreadsheetBuilder stream(OutputStream out, File template) throws IOException, InvalidFormatException {
+        return new PoiSpreadsheetBuilder(new SXSSFWorkbook(new XSSFWorkbook(template)), out);
+    }
+
+    public static SpreadsheetBuilder stream(File file, File template) throws IOException, InvalidFormatException {
+        return new PoiSpreadsheetBuilder(new SXSSFWorkbook(new XSSFWorkbook(template)), new FileOutputStream(file));
+    }
+
+    private final Workbook workbook;
     private final OutputStream outputStream;
 
-    private PoiSpreadsheetBuilder(XSSFWorkbook workbook, OutputStream outputStream) {
+    private PoiSpreadsheetBuilder(Workbook workbook, OutputStream outputStream) {
         this.workbook = workbook;
         this.outputStream = outputStream;
     }

@@ -1,15 +1,17 @@
 package builders.dsl.spreadsheet.builder.poi;
 
+import builders.dsl.spreadsheet.api.ForegroundFill;
 import builders.dsl.spreadsheet.api.Keywords;
 import builders.dsl.spreadsheet.builder.api.FontDefinition;
+import builders.dsl.spreadsheet.impl.AbstractBorderDefinition;
+import builders.dsl.spreadsheet.impl.AbstractCellDefinition;
 import builders.dsl.spreadsheet.impl.AbstractCellStyleDefinition;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.xssf.usermodel.*;
-import builders.dsl.spreadsheet.api.ForegroundFill;
-import builders.dsl.spreadsheet.impl.AbstractBorderDefinition;
-import builders.dsl.spreadsheet.impl.AbstractCellDefinition;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,17 +22,18 @@ class PoiCellStyleDefinition extends AbstractCellStyleDefinition {
 
     PoiCellStyleDefinition(PoiCellDefinition cell) {
         super(cell.getRow().getSheet().getWorkbook());
-        if (cell.getCell().getCellStyle().equals(cell.getCell().getSheet().getWorkbook().getStylesSource().getStyleAt(0))) {
-            style = cell.getCell().getSheet().getWorkbook().createCellStyle();
+        Workbook workbook = cell.getCell().getSheet().getWorkbook();
+        if (cell.getCell().getCellStyle().equals(workbook.getCellStyleAt(0))) {
+            style = (XSSFCellStyle) workbook.createCellStyle();
             cell.getCell().setCellStyle(style);
         } else {
-            style = cell.getCell().getCellStyle();
+            style = (XSSFCellStyle) cell.getCell().getCellStyle();
         }
     }
 
     PoiCellStyleDefinition(PoiWorkbookDefinition workbook) {
         super(workbook);
-        this.style = workbook.getWorkbook().createCellStyle();
+        this.style = (XSSFCellStyle) workbook.getWorkbook().createCellStyle();
     }
 
     @Override
@@ -134,7 +137,7 @@ class PoiCellStyleDefinition extends AbstractCellStyleDefinition {
 
     @Override
     protected void doFormat(String format) {
-        XSSFDataFormat dataFormat = getWorkbook().getWorkbook().createDataFormat();
+        DataFormat dataFormat = getWorkbook().getWorkbook().createDataFormat();
         style.setDataFormat(dataFormat.getFormat(format));
     }
 

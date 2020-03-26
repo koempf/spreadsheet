@@ -3,61 +3,46 @@ package builders.dsl.spreadsheet.builder.poi;
 import builders.dsl.spreadsheet.api.Keywords;
 import builders.dsl.spreadsheet.builder.api.*;
 import builders.dsl.spreadsheet.impl.*;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.*;
 
 import java.util.*;
 
-import static org.apache.poi.ss.usermodel.CellType.*;
-
 class PoiCellDefinition extends AbstractCellDefinition {
-    PoiCellDefinition(PoiRowDefinition row, XSSFCell xssfCell) {
+
+    PoiCellDefinition(PoiRowDefinition row, Cell cell) {
         super(row);
-        this.xssfCell = checkNotNull(xssfCell, "Cell");
-    }
-
-    private static <T> T checkNotNull(T o, String what) {
-        if (o == null) {
-            throw new IllegalArgumentException(what + " cannot be null");
-        }
-
-        return o;
+        this.cell = Objects.requireNonNull(cell, "Cell");
     }
 
     @Override
     public PoiCellDefinition value(Object value) {
         if (value == null) {
-            xssfCell.setCellType(BLANK);
+            cell.setBlank();
             return this;
         }
 
         if (value instanceof Number) {
-            xssfCell.setCellType(NUMERIC);
-            xssfCell.setCellValue(((Number) value).doubleValue());
+            cell.setCellValue(((Number) value).doubleValue());
             return this;
         }
 
         if (value instanceof Date) {
-            xssfCell.setCellType(NUMERIC);
-            xssfCell.setCellValue((Date) value);
+            cell.setCellValue((Date) value);
             return this;
         }
 
         if (value instanceof Calendar) {
-            xssfCell.setCellType(NUMERIC);
-            xssfCell.setCellValue((Calendar) value);
+            cell.setCellValue((Calendar) value);
             return this;
         }
 
         if (value instanceof Boolean) {
-            xssfCell.setCellType(BOOLEAN);
-            xssfCell.setCellValue((Boolean) value);
+            cell.setCellValue((Boolean) value);
             return this;
         }
 
-        xssfCell.setCellType(STRING);
-        xssfCell.setCellValue(value.toString());
+        cell.setCellValue(value.toString());
         return this;
     }
 
@@ -83,7 +68,7 @@ class PoiCellDefinition extends AbstractCellDefinition {
 
     @Override
     protected void doName(String name) {
-        XSSFName theName = xssfCell.getRow().getSheet().getWorkbook().createName();
+        Name theName = cell.getRow().getSheet().getWorkbook().createName();
         theName.setNameName(name);
         theName.setRefersToFormula(generateRefersToFormula());
     }
@@ -100,16 +85,16 @@ class PoiCellDefinition extends AbstractCellDefinition {
 
     @Override
     protected void applyComment(DefaultCommentDefinition comment) {
-        applyTo(comment, xssfCell);
+        applyTo(comment, cell);
     }
 
     private String generateRefersToFormula() {
-        return "\'" + xssfCell.getSheet().getSheetName().replaceAll("'", "\\'") + "\'!" + xssfCell.getReference();
+        return "'" + cell.getSheet().getSheetName().replaceAll("'", "\\'") + "'!" + getRow().getSheet().getWorkbook().getReference(cell);
     }
 
     @Override
     public DimensionModifier width(double width) {
-        getRow().getSheet().getSheet().setColumnWidth(xssfCell.getColumnIndex(), (int) Math.round(width * 255D));
+        getRow().getSheet().getSheet().setColumnWidth(cell.getColumnIndex(), (int) Math.round(width * 255D));
         return new WidthModifier(this, width, WIDTH_POINTS_PER_CM, WIDTH_POINTS_PER_INCH);
     }
 
@@ -121,7 +106,7 @@ class PoiCellDefinition extends AbstractCellDefinition {
 
     @Override
     public PoiCellDefinition width(Keywords.Auto auto) {
-        getRow().getSheet().addAutoColumn(xssfCell.getColumnIndex());
+        getRow().getSheet().addAutoColumn(cell.getColumnIndex());
         return this;
     }
 
@@ -158,14 +143,13 @@ class PoiCellDefinition extends AbstractCellDefinition {
         return new PoiImageCreator(this, fileType);
     }
 
-    protected XSSFCell getCell() {
-        return xssfCell;
+    protected Cell getCell() {
+        return cell;
     }
 
     @Override
     public void resolve() {
         if (richTextParts != null && richTextParts.size() > 0) {
-            XSSFRichTextString text = xssfCell.getRichStringCellValue();
 
             List<String> texts = new ArrayList<String>();
 
@@ -173,7 +157,9 @@ class PoiCellDefinition extends AbstractCellDefinition {
                 texts.add(part.getText());
             }
 
-            text.setString(Utils.join(texts, ""));
+            Workbook wb = getRow().getSheet().getWorkbook().getWorkbook();
+            CreationHelper factory = wb.getCreationHelper();
+            RichTextString text = factory.createRichTextString(Utils.join(texts, ""));
 
             for (RichTextPart richTextPart : richTextParts) {
                 if (richTextPart.getText() != null && richTextPart.getText().length() > 0 && richTextPart.getFont() != null) {
@@ -181,7 +167,7 @@ class PoiCellDefinition extends AbstractCellDefinition {
                 }
             }
 
-            xssfCell.setCellValue(text);
+            cell.setCellValue(text);
         }
 
         if ((getColspan() > 1 || getRowspan() > 1) && cellStyle != null && cellStyle instanceof PoiCellStyleDefinition) {
@@ -193,28 +179,29 @@ class PoiCellDefinition extends AbstractCellDefinition {
     }
 
     CellRangeAddress getCellRangeAddress() {
-        return new CellRangeAddress(xssfCell.getRowIndex(), xssfCell.getRowIndex() + getRowspan() - 1, xssfCell.getColumnIndex(), xssfCell.getColumnIndex() + getColspan() - 1);
+        return new CellRangeAddress(cell.getRowIndex(), cell.getRowIndex() + getRowspan() - 1, cell.getColumnIndex(), cell.getColumnIndex() + getColspan() - 1);
     }
 
     @Override
     public String toString() {
-        return "Cell[" + getRow().getSheet().getName() + "!" + xssfCell.getReference() + String.valueOf(getRow().getNumber()) + "]=" +xssfCell.toString();
+        return "Cell[" + getRow().getSheet().getName() + "!" + getRow().getSheet().getWorkbook().getReference(cell) + getRow().getNumber() + "]=" + cell.toString();
     }
 
-    private static void applyTo(DefaultCommentDefinition comment, XSSFCell cell) {
+    private static void applyTo(DefaultCommentDefinition comment, Cell cell) {
         if (comment.getText() == null) {
             throw new IllegalStateException("Comment text has not been set!");
         }
 
-        XSSFComment xssfComment = cell.getCellComment();
+        Comment xssfComment = cell.getCellComment();
+
+        Workbook wb = cell.getRow().getSheet().getWorkbook();
+        CreationHelper factory = wb.getCreationHelper();
 
         if (xssfComment == null) {
-            XSSFWorkbook wb = cell.getRow().getSheet().getWorkbook();
-            XSSFCreationHelper factory = wb.getCreationHelper();
 
-            XSSFDrawing drawing = cell.getRow().getSheet().createDrawingPatriarch();
+            Drawing<?> drawing = cell.getRow().getSheet().createDrawingPatriarch();
 
-            XSSFClientAnchor anchor = factory.createClientAnchor();
+            ClientAnchor anchor = factory.createClientAnchor();
             anchor.setCol1(cell.getColumnIndex());
             anchor.setCol2(cell.getColumnIndex() + comment.getWidth());
             anchor.setRow1(cell.getRow().getRowNum());
@@ -224,13 +211,7 @@ class PoiCellDefinition extends AbstractCellDefinition {
             xssfComment = drawing.createCellComment(anchor);
         }
 
-
-        XSSFRichTextString xssfCommentString = xssfComment.getString();
-        if (xssfCommentString == null) {
-            xssfComment.setString(comment.getText());
-        } else {
-            xssfCommentString.append(comment.getText());
-        }
+        xssfComment.setString(factory.createRichTextString(comment.getText()));
 
         if (comment.getAuthor() != null) {
             xssfComment.setAuthor(comment.getAuthor());
@@ -249,5 +230,6 @@ class PoiCellDefinition extends AbstractCellDefinition {
     private static final double WIDTH_POINTS_PER_INCH = 12;
     private static final double HEIGHT_POINTS_PER_CM = 28;
     private static final double HEIGHT_POINTS_PER_INCH = 72;
-    private final XSSFCell xssfCell;
+
+    private final Cell cell;
 }
