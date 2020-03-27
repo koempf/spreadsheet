@@ -7,6 +7,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetVisibility;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+
+import java.util.Optional;
 
 class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinition {
 
@@ -91,22 +94,34 @@ class PoiSheetDefinition extends AbstractSheetDefinition implements SheetDefinit
         return sheet;
     }
 
+    @Override
+    public void addAutoColumn(int i) {
+        if (getSheet() instanceof SXSSFSheet) {
+            ((SXSSFSheet) getSheet()).trackColumnForAutoSizing(i);
+        } else {
+            super.addAutoColumn(i);
+        }
+    }
+
     protected void processAutoColumns() {
-        for (Integer index : autoColumns) {
-            sheet.autoSizeColumn(index);
-            if (automaticFilter) {
-                sheet.setColumnWidth(index, Math.min(sheet.getColumnWidth(index) + WIDTH_ARROW_BUTTON, MAX_COLUMN_WIDTH));
+        if (!(getSheet() instanceof SXSSFSheet)) {
+            for (Integer index : autoColumns) {
+                sheet.autoSizeColumn(index);
+                if (automaticFilter) {
+                    sheet.setColumnWidth(index, Math.min(sheet.getColumnWidth(index) + WIDTH_ARROW_BUTTON, MAX_COLUMN_WIDTH));
+                }
             }
         }
     }
 
     protected void processAutomaticFilter() {
         if (automaticFilter && sheet.getLastRowNum() > 0) {
+            Row firstOrLastRow = Optional.ofNullable(sheet.getRow(sheet.getFirstRowNum())).orElse(sheet.getRow(sheet.getLastRowNum()));
             sheet.setAutoFilter(new CellRangeAddress(
                     sheet.getFirstRowNum(),
                     sheet.getLastRowNum(),
-                    sheet.getRow(sheet.getFirstRowNum()).getFirstCellNum(),
-                    sheet.getRow(sheet.getFirstRowNum()).getLastCellNum() - 1
+                    firstOrLastRow.getFirstCellNum(),
+                    firstOrLastRow.getLastCellNum() - 1
             ));
         }
     }
