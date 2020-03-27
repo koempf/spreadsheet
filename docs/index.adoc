@@ -154,6 +154,8 @@ PoiSpreadsheetBuilder.create(file).build {                                      
 <3> Create new row
 <4> Create new cell
 
+TIP: You can use `stream` method instead of `create` to use POI's streaming support for a large generated files.
+
 [source,java,indent=0,role="secondary"]
 .Java
 ----
