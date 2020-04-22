@@ -25,9 +25,7 @@ public abstract class AbstractWorkbookDefinition implements WorkbookDefinition {
     public final WorkbookDefinition apply(Class<? extends Stylesheet> stylesheet) {
         try {
             apply(stylesheet.newInstance());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return this;
@@ -101,6 +99,4 @@ public abstract class AbstractWorkbookDefinition implements WorkbookDefinition {
     protected void addPendingLink(AbstractPendingLink link) {
         toBeResolved.add(link);
     }
-
-
 }

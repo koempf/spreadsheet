@@ -3,8 +3,8 @@ package builders.dsl.spreadsheet.builder.poi;
 import builders.dsl.spreadsheet.builder.api.LinkDefinition;
 import builders.dsl.spreadsheet.impl.Utils;
 import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.xssf.usermodel.XSSFHyperlink;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Hyperlink;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,8 +28,8 @@ class PoiLinkDefinition implements LinkDefinition {
 
     @Override
     public PoiCellDefinition email(String email) {
-        XSSFWorkbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
-        XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.EMAIL);
+        Workbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
+        Hyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.EMAIL);
         link.setAddress("mailto:" + email);
         cell.getCell().setHyperlink(link);
         return cell;
@@ -38,8 +38,8 @@ class PoiLinkDefinition implements LinkDefinition {
     @Override
     public PoiCellDefinition email(final Map<String, ?> parameters, String email) {
         try {
-            XSSFWorkbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
-            XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.EMAIL);
+            Workbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
+            Hyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.EMAIL);
             List<String> params = new ArrayList<String>();
             for (Map.Entry<String, ?> parameter: parameters.entrySet()) {
                 if (parameter.getValue() != null) {
@@ -58,8 +58,8 @@ class PoiLinkDefinition implements LinkDefinition {
 
     @Override
     public PoiCellDefinition url(String url) {
-        XSSFWorkbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
-        XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.URL);
+        Workbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
+        Hyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.URL);
         link.setAddress(url);
         cell.getCell().setHyperlink(link);
         return cell;
@@ -67,8 +67,8 @@ class PoiLinkDefinition implements LinkDefinition {
 
     @Override
     public PoiCellDefinition file(String path) {
-        XSSFWorkbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
-        XSSFHyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.FILE);
+        Workbook workbook = cell.getRow().getSheet().getWorkbook().getWorkbook();
+        Hyperlink link = workbook.getCreationHelper().createHyperlink(HyperlinkType.FILE);
         link.setAddress(path);
         cell.getCell().setHyperlink(link);
         return cell;

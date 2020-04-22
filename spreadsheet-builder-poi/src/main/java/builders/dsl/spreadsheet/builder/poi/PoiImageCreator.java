@@ -2,10 +2,11 @@ package builders.dsl.spreadsheet.builder.poi;
 
 import builders.dsl.spreadsheet.builder.api.CellDefinition;
 import builders.dsl.spreadsheet.builder.api.ImageCreator;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Picture;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.util.IOUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -39,7 +40,7 @@ class PoiImageCreator implements ImageCreator {
     @Override
     public CellDefinition from(InputStream stream) {
         try {
-            addPicture(cell.getRow().getSheet().getSheet().getWorkbook().addPicture(stream, type));
+            addPicture(cell.getRow().getSheet().getSheet().getWorkbook().addPicture(IOUtils.toByteArray(stream), type));
         } catch (IOException e) {
             throw new RuntimeException("Exception adding image from stream: " + stream, e);
         }
@@ -53,10 +54,10 @@ class PoiImageCreator implements ImageCreator {
     }
 
     private void addPicture(int pictureIdx) {
-        XSSFDrawing drawing = cell.getRow().getSheet().getSheet().createDrawingPatriarch();
+        Drawing<?> drawing = cell.getRow().getSheet().getSheet().createDrawingPatriarch();
 
-        XSSFCreationHelper helper = cell.getRow().getSheet().getSheet().getWorkbook().getCreationHelper();
-        XSSFClientAnchor anchor = helper.createClientAnchor();
+        CreationHelper helper = cell.getRow().getSheet().getSheet().getWorkbook().getCreationHelper();
+        ClientAnchor anchor = helper.createClientAnchor();
         anchor.setCol1(cell.getCell().getColumnIndex());
         anchor.setRow1(cell.getCell().getRowIndex());
 

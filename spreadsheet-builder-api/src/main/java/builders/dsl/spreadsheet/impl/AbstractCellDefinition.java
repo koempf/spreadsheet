@@ -10,15 +10,7 @@ import java.util.function.Consumer;
 public abstract class AbstractCellDefinition implements CellDefinition, Resolvable, Spannable {
     
     protected AbstractCellDefinition(AbstractRowDefinition row) {
-        this.row = checkNotNull(row, "Row");
-    }
-
-    private static <T> T checkNotNull(T o, String what) {
-        if (o == null) {
-            throw new IllegalArgumentException(what + " cannot be null");
-        }
-
-        return o;
+        this.row = Objects.requireNonNull(row, "Row");
     }
 
     @Override

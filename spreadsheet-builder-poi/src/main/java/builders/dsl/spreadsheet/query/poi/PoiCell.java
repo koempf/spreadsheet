@@ -3,29 +3,24 @@ package builders.dsl.spreadsheet.query.poi;
 import builders.dsl.spreadsheet.api.Cell;
 import builders.dsl.spreadsheet.api.CellStyle;
 import builders.dsl.spreadsheet.api.Comment;
+import builders.dsl.spreadsheet.impl.DefaultCommentDefinition;
 import builders.dsl.spreadsheet.impl.Utils;
 import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.xssf.usermodel.*;
-import builders.dsl.spreadsheet.impl.DefaultCommentDefinition;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFComment;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 
 import java.util.*;
 
 class PoiCell implements Cell {
 
     PoiCell(PoiRow row, XSSFCell xssfCell) {
-        this.xssfCell = checkNotNull(xssfCell, "Cell");
-        this.row = checkNotNull(row, "Row");
-    }
-
-    private static <T> T checkNotNull(T o, String what) {
-        if (o == null) {
-            throw new IllegalArgumentException(what + " cannot be null");
-        }
-
-        return o;
+        this.xssfCell = Objects.requireNonNull(xssfCell, "Cell");
+        this.row = Objects.requireNonNull(row, "Row");
     }
 
     @Override
