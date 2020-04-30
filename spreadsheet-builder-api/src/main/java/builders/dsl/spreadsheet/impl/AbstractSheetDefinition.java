@@ -146,7 +146,7 @@ public abstract class AbstractSheetDefinition implements SheetDefinition, Resolv
 
         int startPosition = startPositions.remove(startPositions.size() - 1);
 
-        if (nextRowNumber - startPosition > 1) {
+        if (nextRowNumber - startPosition > 0) {
             int endPosition = nextRowNumber - 1;
             applyRowGroup(startPosition, endPosition, collapsed);
         }

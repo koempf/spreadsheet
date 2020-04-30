@@ -177,7 +177,7 @@ public abstract class AbstractRowDefinition implements RowDefinition {
 
         int startPosition = startPositions.remove(startPositions.size() - 1);
 
-        if (nextColNumber - startPosition > 1) {
+        if (nextColNumber - startPosition > 0) {
             int endPosition = nextColNumber - 1;
             doCreateGroup(startPosition, endPosition, collapsed);
         }
