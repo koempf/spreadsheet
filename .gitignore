@@ -9,5 +9,4 @@ gradle-app.setting
 !gradle-wrapper.jar
 
 # Google OAuth tokens
-libs/spreadsheet-builder-google/tokens/
-!libs/spreadsheet-builder-google/tokens/decrypt_secret.sh
+libs/spreadsheet-builder-google/tokens/StoredCredential
