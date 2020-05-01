@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Decrypt Stored Credentials
-        run: libs/spreadsheet-builder-google/tokens/decrypt_secret.sh
+        run: ./libs/spreadsheet-builder-google/tokens/decrypt_secret.sh
       - uses: eskatos/gradle-command-action@v1
         with:
           arguments: check coveralls --stacktrace

@@ -17,7 +17,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Decrypt Stored Credentials
-        run: libs/spreadsheet-builder-google/tokens/decrypt_secret.sh
+        run: ./libs/spreadsheet-builder-google/tokens/decrypt_secret.sh
       - name: Semantic Version
         id: version
         uses: ncipollo/semantic-version-action@v1
