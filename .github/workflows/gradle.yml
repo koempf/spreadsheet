@@ -18,9 +18,6 @@ jobs:
           - 5.2.1
           - 5.1.1
           - 4.10.3
-          - 4.9
-          - 4.8.1
-          - 4.7
           - wrapper       # current version
     name: Check
     runs-on: ubuntu-latest
@@ -46,7 +43,7 @@ jobs:
       - uses: eskatos/gradle-command-action@v1
         with:
           # arguments: check coveralls --stacktrace
-          arguments: check --stacktrace
+          arguments: check --stacktrace --warning-mode all
           gradle-version: ${{ matrix.gradle }}
       - name: Show Reports
         uses: actions/upload-artifact@v1
