@@ -10,6 +10,7 @@ jobs:
       CI: true
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       DSL_SPREADSHEET_BUILDER_GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_SECRET }}
+      LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
     steps:
       - uses: actions/checkout@v1

@@ -10,6 +10,7 @@ jobs:
     env:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
       CI: true
+      LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
     steps:
       - uses: actions/checkout@v1
