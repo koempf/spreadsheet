@@ -3,28 +3,13 @@ name: Check
 on: [push, pull_request]
 jobs:
   check:
-    strategy:
-      fail-fast: false    # run all parallel jobs
-      matrix:
-        gradle:
-          - 6.3           # latest version
-          - 6.2.2
-          - 6.1.1
-          - 6.0.1
-          - 5.6.4
-          - 5.5.1
-          - 5.4.1
-          - 5.3.1
-          - 5.2.1
-          - 5.1.1
-          - 4.10.3
-          - wrapper       # current version
     name: Check
     runs-on: ubuntu-latest
     env:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
       CI: true
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      DSL_SPREADSHEET_BUILDER_GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_SECRET }}
 
     steps:
       - uses: actions/checkout@v1
@@ -40,11 +25,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}-${{ hashFiles('**/gradle.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+      - name: Decrypt Stored Credentials
+        run: libs/spreadsheet-builder-google/tokens/decrypt_secret.sh
       - uses: eskatos/gradle-command-action@v1
         with:
-          # arguments: check coveralls --stacktrace
-          arguments: check --stacktrace --warning-mode all
-          gradle-version: ${{ matrix.gradle }}
+          arguments: check coveralls --stacktrace
       - name: Show Reports
         uses: actions/upload-artifact@v1
         if: failure()

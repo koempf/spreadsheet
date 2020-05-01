@@ -1,48 +1,112 @@
-//buildscript {
-//    repositories {
-//        jcenter()
-//        mavenCentral()
-//    }
-//    dependencies {
-//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
-//        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-//    }
-//}
+plugins {
+    id 'org.kordamp.gradle.groovy-project'
+    id 'org.kordamp.gradle.bintray'
+    id 'org.kordamp.gradle.checkstyle'
+    id 'org.kordamp.gradle.codenarc'
+    id 'org.kordamp.gradle.coveralls'
+}
 
-//plugins {
-//    id 'org.ajoberstar.github-pages' version '1.3.1'
-//}
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = '**UNDEFINED**'
+if (!project.hasProperty('bintrayApiKey'))   ext.bintrayApiKey   = '**UNDEFINED**'
 
-//apply plugin: 'org.asciidoctor.convert'
+config {
+    release = (rootProject.findProperty('release') ?: false).toBoolean()
 
-repositories {
-    jcenter()
-    mavenCentral()
-    maven {
-        url 'https://repo.spring.io/release/'
+    info {
+        name        = 'Spreadsheet Builder'
+        vendor      = 'Vladimir Orany'
+        description = 'DSL for Writing Spreadsheets on the JVM'
+
+        links {
+            website      = "https://github.com/${slug}"
+            issueTracker = "https://github.com/${slug}/issues"
+            scm          = "https://github.com/${slug}.git"
+        }
+
+        people {
+            person {
+                id    = 'musketyr'
+                name  = 'Vladimir Orany'
+                roles = ['developer']
+            }
+        }
+
+        repositories {
+            repository {
+                name = 'localRelease'
+                url  = "${project.rootProject.buildDir}/repos/local/release"
+            }
+            repository {
+                name = 'localSnapshot'
+                url  = "${project.rootProject.buildDir}/repos/local/snapshot"
+            }
+        }
+    }
+
+    licensing {
+        licenses {
+            license {
+                id = 'Apache-2.0'
+            }
+        }
+    }
+
+    publishing {
+        signing             = false
+        releasesRepository  = 'localRelease'
+        snapshotsRepository = 'localSnapshot'
+    }
+
+    bintray {
+        credentials {
+            username = bintrayUsername
+            password = bintrayApiKey
+        }
+        userOrg    = 'dsl-builders'
+        name       = rootProject.name
+        publish    = true
+    }
+
+    quality {
+        checkstyle {
+            toolVersion = '8.27'
+        }
+
+        codenarc {
+            toolVersion = '1.5'
+        }
     }
 }
 
-dependencies {
-    // https://mvnrepository.com/artifact/io.spring.asciidoctor/spring-asciidoctor-extensions
-//    asciidoctor group: 'io.spring.asciidoctor', name: 'spring-asciidoctor-extensions', version: '0.1.1.RELEASE'
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
 
+    license {
+        exclude '**/*.json'
+        exclude '***.yml'
+    }
 }
 
-subprojects {
-    apply plugin: 'groovy'
-    apply plugin: 'checkstyle'
-    apply plugin: 'codenarc'
-//    apply plugin: 'maven-publish'
-//    apply plugin: 'com.jfrog.bintray'
+subprojects { subproject ->
+    if (subproject.name == 'guide') return
 
-    group = 'builders.dsl'
+    apply plugin: 'groovy'
+
+    config {
+        bintray {
+            name = subproject.name
+            githubRepo = slug
+        }
+    }
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     repositories {
-       jcenter()
+        jcenter()
     }
 
     dependencies {
@@ -52,122 +116,4 @@ subprojects {
     jar {
         manifest.attributes provider: 'gradle'
     }
-
-    checkstyle {
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-    }
-
-    codenarc {
-        configFile = rootProject.file('config/codenarc.xml')
-        toolVersion = '1.3'
-    }
-
-    test {
-        reports {
-            junitXml.enabled = true
-            html.enabled = true
-        }
-    }
-
-
-
-    // publishing
-//    publishing {
-//        publications {
-//            groovyMaven(MavenPublication) {
-//                from components.java
-//
-//                artifact sourcesJar {
-//                    classifier "sources"
-//                }
-//
-//                artifact javadocJar {
-//                    classifier "javadoc"
-//                }
-//            }
-//        }
-//    }
-
-// set bintrayUser & bintrayKey in gradle.properties
-//    bintray {
-//
-//        user = getPropertyOrUseDefault('bintrayUser', 'fake_user')
-//        key = getPropertyOrUseDefault('bintrayKey', 'fake_key')
-//        publications = ['groovyMaven']
-//
-//        def projectName = project.name
-//        def projectDescription = project.description
-//
-//        pkg {
-//            websiteUrl = 'http://spreadsheet.dsl.builders/'
-//            issueTrackerUrl = 'https://github.com/dsl-builders/spreadsheet/issues'
-//            vcsUrl = 'https://github.com/dsl-builders/spreadsheet.git'
-//
-//            repo = 'maven' // or your repo name
-//            userOrg = 'dsl-builders'
-//            name = projectName       // somehow project.* doesn't work in this closure
-//            desc = projectDescription
-//            licenses = ['Apache-2.0']
-//        }
-//        // dryRun = true // whether to run this as dry-run, without deploying
-//    }
-//
-//    // custom tasks for creating source/javadoc jars
-//    task sourcesJar(type: Jar, dependsOn: classes) {
-//        classifier = 'sources'
-//        from sourceSets.main.allSource
-//    }
-//
-//    task javadocJar(type: Jar, dependsOn: javadoc) {
-//        classifier = 'javadoc'
-//        from javadoc.destinationDir
-//    }
-//
-//    artifacts {
-//        archives sourcesJar, javadocJar
-//    }
-
 }
-
-// asciidoctor publishing
-//asciidoctor {
-//
-//    sourceDir = file('docs')
-//
-//    resources {
-//        from(sourceDir) {
-//            include 'css/**', 'images/**', 'CNAME'
-//        }
-//    }
-//
-//    attributes 'docinfo1': ['version': project.version],
-//            'imagesdir': 'images',
-//            'source-highlighter': 'highlight.js',
-//            'stylesdir': 'css',
-//            icons: 'font',
-//            'toc': 'left',
-//            version: project.version,
-//            'projectUrl': 'https://github.com/dsl-builders/spreadsheet.git'
-//}
-//
-//githubPages {
-//    repoUri = 'https://github.com/dsl-builders/spreadsheet.git'
-//
-//    credentials {
-//        username = getPropertyOrUseDefault('githubToken', '')
-//        password = ''
-//    }
-//
-//    pages {
-//        from file(asciidoctor.outputDir.path + '/html5')
-//    }
-//}
-//
-//publishGhPages.dependsOn asciidoctor
-//
-//
-//
-//
-//String getPropertyOrUseDefault(String propertyName, String defaultValue) {
-//    hasProperty(propertyName) ? getProperty(propertyName) : defaultValue
-//}

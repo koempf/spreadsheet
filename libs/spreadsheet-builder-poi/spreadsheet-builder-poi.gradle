@@ -1,3 +1,9 @@
+config {
+    bintray {
+        enabled = true
+    }
+}
+
 dependencies {
     compile project(':spreadsheet-builder-api')
 

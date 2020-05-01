@@ -6,7 +6,7 @@ image::ribbon.png[link={projectUrl}]
 Spreadsheet builder provides convenient way how to read and create MS Excel OfficeOpenXML
 Documents (XSLX) focus not only on content side but also on easy styling.
 
-= Installation
+== Installation
 
 Spreadsheet Builder API is available on JCenter.
 
@@ -21,13 +21,13 @@ repositories {
 
 dependencies {
     // Excel
-    compile 'builders.dsl:spreadsheet-builder-poi:{version}'
+    compile 'builders.dsl:spreadsheet-builder-poi:{project-version}'
 
     // or Google Spreadsheet
-    compile 'builders.dsl:spreadsheet-builder-google:{version}'
+    compile 'builders.dsl:spreadsheet-builder-google:{project-version}'
 
     // for groovy support
-    compile 'builders.dsl:spreadsheet-builder-groovy:{version}'
+    compile 'builders.dsl:spreadsheet-builder-groovy:{project-version}'
 }
 
 ----
@@ -39,19 +39,19 @@ dependencies {
 <dependency>
   <groupId>builders.dsl</groupId>
   <artifactId>spreadsheet-builder-poi</artifactId>
-  <version>{version}</version>
+  <version>{project-version}</version>
   <type>pom</type>
 </dependency>
 <!-- Google Spreadsheet-->
 <dependency>
   <groupId>builders.dsl</groupId>
   <artifactId>spreadsheet-builder-google</artifactId>
-  <version>{version}</version>
+  <version>{project-version}</version>
   <type>pom</type>
 </dependency>
 ----
 
-= REST API
+== REST API
 New experimental REST API is available at `https://api.sheet.rest/v1`:
 
 [source,indent=0,role="primary"]
@@ -122,7 +122,7 @@ within next one hour:
 Feel free to use provided API Key `jYXipZWOlU18gqyogkRSG4GgKdymodDY4Hj5BkfO` for testing or mailto:vladimir+sheet.rest@orany.cz?subject=Sheet.REST+API+Key&body=Hello,+I+would+like+an+dedicated+access+for+Sheet.REST+because+...[ask for a dedicated one].
 Use the JSON and YAML sections of the examples for syntax details. Sheet.REST is currently in public beta.
 
-= Writing Spreadsheets
+== Writing Spreadsheets
 
 Following example creates the basic spreadsheet with two rows and three columns.
 
@@ -257,7 +257,7 @@ image::basic_sample.png[]
 You can pass an existing spreadsheet file as a template to `PoiSpreadsheetBuilder.create` method.
 ====
 
-== Sheets and Rows
+=== Sheets and Rows
 Each sheet needs to have a name provided. Rows are defined inside the sheets.
 
 You can specify the row number when creating a row. Another rows created without the number specified will be placed
@@ -337,7 +337,7 @@ _Result_
 
 image:specific_row.png[]
 
-=== Outlines
+==== Outlines
 Rows and columns can be optionally grouped into expanded or collapsed groups for better readability.
 
 [source,indent=0,role="primary"]
@@ -415,7 +415,7 @@ _Result_
 
 image:outline_for_rows.png[]
 
-=== Freezing columns and rows
+==== Freezing columns and rows
 
 You can freeze some rows and or columns to prevent scrolling them.
 
@@ -569,7 +569,7 @@ _Result_
 
 image:frozen_cells.gif[]
 
-=== Protection
+==== Protection
 You can either lock the sheet or you can protect it with password. Then the users won't be able to edit any cells
 or view any formulas. This can emphasize that user changes are not desired.
 
@@ -650,7 +650,7 @@ _Result_
 
 image:locked.png[]
 
-=== Visibility
+==== Visibility
 
 You can hide sheet you don't want to display to the user. If you use `hideCompletely` the user will not be able
 to unhide the sheet from the Excel UI.
@@ -704,7 +704,7 @@ sheets:
   state: veryHidden
 ----
 
-=== Automatic Filters
+==== Automatic Filters
 
 You can create an automatic filter for all data in given sheet.
 
@@ -815,7 +815,7 @@ _Result_
 
 image:filtered.png[]
 
-=== Page Settings
+==== Page Settings
 You can define the paper size, orientation and on how many pages should the sheet be printed within the `page` closure
 of the sheet.
 
@@ -892,7 +892,7 @@ sheets:
     - value: A5 Landscape
 ----
 
-== Cells
+=== Cells
 
 Cells are defined within rows. The simples example to create a cell is providing its value as a method call argument.
 Additionally you can customize more details when you pass a closure with the cell definition. Then you can either
@@ -991,7 +991,7 @@ _Result_
 
 image:basic_cells.png[]
 
-=== Type handling
+==== Type handling
 
 Any cell values which are not instances of `Number`, `Boolean`, `Date` or `Calendar` are handled as `String` using a `toString()`
 method. For any instance of `Number`, `Date` or `Calendar` the type of cell is set to `NUMERIC`.
@@ -1002,7 +1002,7 @@ For `Boolean` the type of the cell is set automatically to `BOOLEAN`.
 `Date` and `Calendar` values needs to have <<Data formats, data format>> assigned otherwise they will appear in the generated spreadsheet as plain numbers.
 ====
 
-=== Merging cells
+==== Merging cells
 
 You can set `rowspan` and/or `colspan` of any cell to merge multiple cells together.
 
@@ -1132,7 +1132,7 @@ _Result_
 
 image:spans.png[]
 
-=== Images
+==== Images
 You can insert an image calling one of `png`, `jpeg`, `emf`, `wmf`, `pict`, `dib` method inside the cell definition.
 
 [source,indent=0,role="primary"]
@@ -1203,7 +1203,7 @@ Resizing images with API is not reliable so you need to resize your image proper
 
 
 
-=== Comments
+==== Comments
 You can set comment of any cell using the `comment` method. Use the variant accepting closure If you want to specify
 the author of the comment as well. The author only appears in the status bar of the application.
 
@@ -1307,7 +1307,7 @@ _Result_
 
 image:comments.png[]
 
-=== Names
+==== Names
 
 Naming cells helps you to refer them with links or you can use them to expand the formula definitions. To declare name
 of the cell simply call the `name` method inside the cell definition. See <<Links>> 
@@ -1428,7 +1428,7 @@ _Result_
 
 image:names.png[]
 
-=== Links
+==== Links
 
 You can create for types of links
 
@@ -1609,7 +1609,7 @@ sheets:
 You can add arbitrary attributes to the email link such as `cc`, `body` or `subject`.
 ====
 
-=== Dimensions
+==== Dimensions
 
 You can set the width of the cells as the multiple of standard character width, centimeters or inches.
 You can also set the column to accommodate the width automatically using the `auto` keyword but it may slow down the generation. The width is defined inside cells
@@ -1745,7 +1745,7 @@ _Result_
 image:dimensions.png[]
 
 
-== Styles
+=== Styles
 Cell styles are defined either for a whole row or a particular cell. You can define a named style on the top level along
 with sheets and than refer to it from cell or row.
 
@@ -1945,7 +1945,7 @@ _Result_
 
 image:styles.png[]
 
-=== Alignments
+==== Alignments
 Use `align` method to align the cells horizontally or vertically. You place the vertical alignment first and then
 the horizontal. Use default value `bottom` if you dont want to change the vertical alignment but you want to change
 the horizontal one.
@@ -2111,7 +2111,7 @@ _Result_
 image:alignment.png[]
 
 
-=== Fills
+==== Fills
 You can set the background color or combination of foreground color, background color and fill to customize cells'
 appearance. Color can be set as hexadecimal string starting with `#` or you can use one of predefined colors
 which are exactly the same as HTML predefined colors.
@@ -2180,15 +2180,15 @@ sheets:
           fill: squares
 ----
 
-==== Available predefined colors
+===== Available predefined colors
 
 image:colors.png[]
 
-==== Available fill values
+===== Available fill values
 
 image:fills.png[]
 
-=== Borders
+==== Borders
 You can define a color and style of the cell border. To address which color to change, use `top`, `bottom`, `left`
 and/or `right` keywords when calling the `border` method. See <<Available predefined colors>>.
 Colors can be defined as hexadecimal string as well.
@@ -2267,11 +2267,11 @@ sheets:
             color: gray
 ----
 
-==== Available border styles
+===== Available border styles
 
 image:borders.png[]
 
-=== Fonts
+==== Fonts
 
 You can customize the font size, name and color of the text in the cell. You also can make it `bold`, `italic`, `underline` or
 `strikeout`. See <<Available predefined colors>>.
@@ -2469,7 +2469,7 @@ _Result_
 
 image:fonts.png[]
 
-=== Rich Texts
+==== Rich Texts
 
 Apart from setting the font for the whole cell you can create a rich text cell content as well. Instead of `value`
 use multiple calls to `text` method which takes optional closure to define the font for the current text run. The font
@@ -2607,7 +2607,7 @@ Some older versions that 3.13 of Apache POI does not handle rich texts well. Ple
 you are using at least version 3.13.
 ====
 
-=== Data formats
+==== Data formats
 You can assign a data format using the `format` method. Detailed guide how the format works can be found in
 link:https://support.microsoft.com/en-us/help/264372/how-to-control-and-understand-settings-in-the-format-cells-dialog-box-in-excel[How to control and understand settings in the Excel for Format Cells
 dialog box]. link:https://poi.apache.org/apidocs/org/apache/poi/ss/usermodel/BuiltinFormats.html[Apache POI Builtin Formats]
@@ -2834,7 +2834,7 @@ Format Symbol      Description/result
    a/p                until midnight.
 ....
 
-=== Indentations
+==== Indentations
 
 You can set the indentation in number of characters from the beginning of the cell.
 
@@ -3010,7 +3010,7 @@ _Result_
 
 image:indent.png[]
 
-=== Rotation
+==== Rotation
 
 You can rotate the text in the cell using the `rotation` method. It accepts number from `0` to `180`.
 Numbers lower from `1` to `90` will produces text going _uphill_ and from `91` to `180` text going _downhill_
@@ -3182,7 +3182,7 @@ _Result_
 
 image:rotation.png[]
 
-=== Text wrap
+==== Text wrap
 
 By default the text is not wrapped. This mean that the new lines characters present in the string are ignored.
 You can update this by writing `wrap text` line in the style definition closure.
@@ -3301,7 +3301,7 @@ _Result_
 image:wrap.png[]
 
 
-=== Reusing Styles
+==== Reusing Styles
 
 You can externalize your styles configuration into class implementing `builders.dsl.spreadsheet.builder.api.Stylesheet`
 interface to maximize code reuse or report customization.
@@ -3408,7 +3408,7 @@ _Result_
 image:stylesheets.png[]
 
 
-= Reading and Querying spreadsheets
+== Reading and Querying spreadsheets
 
 You can query the spreadsheet with similar syntax as you build it.
 
@@ -3488,7 +3488,7 @@ public class CriteriaDemo {
 The `query` method returns collections of every cell found matching given criteria. There is also shortcut methods
 `all()`, `find()` and `exists()` to return every cell, find single cell or just test for cell presence.
 
-== Data Model
+=== Data Model
 
 The `Cell` objects provides getters counterparts to methods supported by query such as `getName()`. You can also
 easily navigate into all eight directions with methods like `getLeft()`, `getAboveLeft()` etc.  or access the whole
@@ -3528,7 +3528,7 @@ assert a.right.value == 'B'
 assert a.row.below.cells.first().value == a.below.value
 ----
 
-== Sheets and Rows
+=== Sheets and Rows
 
 You can query only specific sheet or row
 
@@ -3751,7 +3751,7 @@ assertNotNull(dataRow.get("One"));
 assertEquals(1, dataRow.get("One"));
 ----
 
-== Cells
+=== Cells
 
 You can easily specify which cells you want to return from the query. For example by specifying desired value.
 You can also query for more specific type with `date`, `number`, `string`, `bool` methods.
@@ -3817,7 +3817,7 @@ query.query(w -> {
 _Result:_ Every cell from column 'B' of any sheet and row
 
 
-=== Merged Cells
+==== Merged Cells
 
 You can query for merged cells only.
 
@@ -3853,7 +3853,7 @@ query.query(w -> {
 
 _Result:_ Every cell in the spreadsheet which are merged over five cells horizontally and two cells vertically.
 
-=== Comments
+==== Comments
 
 You can query for cells with given comment.
 
@@ -3917,7 +3917,7 @@ query.query(w -> {
 });
 ----
 
-=== Names
+==== Names
 
 You can query for specific named cell.
 
@@ -3956,7 +3956,7 @@ _Result:_ The cell with the named reference 'THE_CELL'.
 Be careful as the names can be different than the one you've used in the builder as some implementation has certain naming limitations.
 ====
 
-=== Styles and Fonts
+==== Styles and Fonts
 
 You can query cells by style parameters such as foreground color or font height. All the options from the style builder is currently supported
 except text wrapping, rich texts and alignment options. All font options are supported. See the guide above for reference.
@@ -4009,44 +4009,51 @@ _Result:_ Every cell from the spreadsheet which has red foreground and white fon
 The color you usually see in the cell is `foreground` not a `background` as you may think!
 ====
 
-= Changelog
+== Changelog
 
-== 2.0.0
+=== 2.1.1
+Allowing adding groups for just single row or column
+
+=== 2.1.0
+Added support for streaming POI API.
+
+
+=== 2.0.0
 Added indirect support for Google Spreadsheet (link:https://github.com/dsl-builders/spreadsheet/blob/master/spreadsheet-builder-google/src/test/groovy/builders/dsl/spreadsheet/google/GoogleBuilderSpec.groovy[see `GoogleBuilderSpec` for example])
 
-=== Breaking Changes
+==== Breaking Changes
 * changed closure's owner handling so the `owner` is always the `owmner` of top level closure
 * renamed occurrences if `below` to `below`
 * upgraded POI libraries to 4.1.1 and OOXML 1.4
 
-== 1.0.5
+=== 1.0.5
 Fixed problem with fetching cells `above` or `below` when cell list in the row.
 
-== 1.0.4
+=== 1.0.4
 
 Fixed problem with fetching cells `above` or `below` when cell list in the row is not initialized yet.
 
-== 1.0.3
+=== 1.0.3
 
 Fixed problem with automatic width of column with long text and automatic filter https://github.com/dsl-builders/spreadsheet/issues/2[#5]
 
-== 1.0.2
+=== 1.0.2
 
 Fixed problem with automatic column widths when automatic filter is enabled https://github.com/dsl-builders/spreadsheet/issues/2[#2]
 
-== 1.0.1
+=== 1.0.1
 Better support in IntelliJ IDEA.
 
 Deprecated alignment definition without comma in Groovy such as `align center center` in favor of `align center, center`
 
-== 1.0
+=== 1.0
 Java-only API which can be used with Java 8.
 
 Builder and criteria definition chaining - methods returning self instead of `void`.
 
 Added ability to hide sheets https://github.com/MetadataConsulting/spreadsheet-builder/issues/19[#19].
 
-=== Breaking Changes
+==== Breaking Changes
 
 Package migration from `org.modelcatalogue.spreadsheet` to `builders.dsl.spreadsheet`.
 
@@ -4069,42 +4076,42 @@ Builder and query API is completely decoupled from the way how the spreadsheet i
 `SpreadsheetDefinition` and `SpreadsheetCriteriaFactory` interfaces has been removed. This opens possibilities
 to create file-free implementation such as Google Sheets in future.
 
-== 0.4.0
+=== 0.4.0
 Ability to also retrieve sheet or rows from the criteria query.
 
-=== Breaking Changes
+==== Breaking Changes
 Criteria methods `query` and `all` no longer returns collections of cells but object of type `SpreadsheetCriteriaResult`.
 This object itself implements at least `Iterable<Cell>` interface allowing to use the results directly in the for loops
 and call most of the default groovy method available on collections. `Collection<Cell>` as well as `Collection<Row>`
 and `Collection<Sheet>` can be accessed using the result object properties `cells`, `rows` and `sheets`.
 
-== 0.3.7
+=== 0.3.7
 Simple page settings, ability to set cells' width and height in centimeters or inches and fixed merging row and cell styles.
 
-== 0.3.6
+=== 0.3.6
 
 Minor improvement in combination of the styles.
 
-== 0.3.5
+=== 0.3.5
 
 Added ability to defined named styles for whole row and particular cell as well and fixed problem with
 merged cells formatting.
 
-== 0.3.4
+=== 0.3.4
 
 Added automatic filtering and allowed casting the api objects to their POI equivalents.
 
-== 0.3.3
+=== 0.3.3
 
 Fixed cells with value `0` rendered as empty cell.
 
-== 0.3.2
+=== 0.3.2
 
 Ability to use existing spreadsheet as a template in builder's `build` method.
 
-== 0.3.0
+=== 0.3.0
 
-=== Breaking Changes
+==== Breaking Changes
 
 No more single word mutating DSL statements such as `locked` or `bold` as they conflicts with newly introduced getters.
 Keywords which are already getters such as `black` for color of same name remain unaffected.
@@ -4126,5 +4133,5 @@ to distinguish them from the ones returned from queries.
 
 The way how the builder is initialized has shifted to _Factory_ patten to distinguish between writing and building
 
-== 0.2.0
+=== 0.2.0
 Introduced getters for parent such as `workbook` for `sheet` etc.

@@ -1,8 +1,23 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "org.kordamp.gradle:settings-gradle-plugin:$kordampVersion"
+        classpath "org.kordamp.gradle:groovy-project-gradle-plugin:$kordampVersion"
+        classpath "org.kordamp.gradle:bintray-gradle-plugin:$kordampVersion"
+        classpath "org.kordamp.gradle:checkstyle-gradle-plugin:$kordampVersion"
+        classpath "org.kordamp.gradle:codenarc-gradle-plugin:$kordampVersion"
+        classpath "org.kordamp.gradle:guide-gradle-plugin:$kordampVersion"
+        classpath "org.kordamp.gradle:coveralls-gradle-plugin:$kordampVersion"
+        classpath 'org.ajoberstar:gradle-git-publish:2.1.3'
+    }
+}
+
+apply plugin: 'org.kordamp.gradle.settings'
+
 rootProject.name = 'spreadsheet'
 
-include 'spreadsheet-builder-groovy',
-        'spreadsheet-builder-api',
-        'spreadsheet-builder-google',
-        'spreadsheet-builder-poi',
-        'spreadsheet-builder-tck-groovy',
-        'spreadsheet-builder-test-java8'
+projects {
+    directories = ['docs', 'libs']
+}
