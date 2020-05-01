@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 plugins {
-    id 'org.kordamp.gradle.groovy-project'
+    id 'org.kordamp.gradle.java-project'
     id 'org.kordamp.gradle.bintray'
     id 'org.kordamp.gradle.checkstyle'
     id 'org.kordamp.gradle.codenarc'
