@@ -407,9 +407,9 @@ abstract class AbstractBuilderSpec extends Specification {
     protected abstract SpreadsheetCriteria createCriteria()
     protected abstract SpreadsheetBuilder createSpreadsheetBuilder()
 
-    protected int getExpectedAllRowsSize() { 20065 }
+    protected int getExpectedAllRowsSize() { 20068 }
 
-    protected int getExpectedAllCellSize() { 80130 }
+    protected int getExpectedAllCellSize() { 80134 }
 
     @SuppressWarnings('EmptyMethodInAbstractClass')
     protected void openSpreadsheet() { }
@@ -779,6 +779,10 @@ abstract class AbstractBuilderSpec extends Specification {
                         }
                         cell 'Headline 6'
                     }
+                    cell 'Headline 7'
+                    collapse {
+                        cell 'Headline 8'
+                    }
                 }
                 group {
                     row {
@@ -794,6 +798,14 @@ abstract class AbstractBuilderSpec extends Specification {
                     }
                     row {
                         cell 'Other stuff'
+                    }
+                }
+                row {
+                    cell()
+                }
+                collapse {
+                    row {
+                        cell 'Collapse one row'
                     }
                 }
             }
