@@ -17,6 +17,7 @@ import spock.lang.Specification
     'NoJavaUtilDate',
     'MethodSize',
     'BuilderMethodWithSideEffects',
+    'ClassSize',
 ])
 abstract class AbstractBuilderSpec extends Specification {
 

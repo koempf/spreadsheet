@@ -81,10 +81,10 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
 
     // google exports empty rows as well
     @Override
-    protected int getExpectedAllRowsSize() { 39663 }
+    protected int getExpectedAllRowsSize() { 39665 }
 
     @Override
-    protected int getExpectedAllCellSize() { 80127 }
+    protected int getExpectedAllCellSize() { 80130 }
 
     /**
      * Tries to open the file in the browser. Only works locally on Mac at the moment. Ignored otherwise.
