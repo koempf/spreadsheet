@@ -20,10 +20,10 @@ package builders.dsl.spreadsheet.parser.data.yml;
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
 import builders.dsl.spreadsheet.parser.data.AbstractBuilderTest;
 
-public class YmlSpreadsheetBuilderTest extends AbstractBuilderTest {
+public class YmlSpreadsheetParserTest extends AbstractBuilderTest {
 
     @Override
     protected void build(SpreadsheetBuilder builder, String sheet) throws Exception {
-        new YmlSpreadsheetBuilder(builder).build(YmlSpreadsheetBuilderTest.class.getResourceAsStream(sheet + ".yml"));
+        new YmlSpreadsheetParser(builder).parse(YmlSpreadsheetParserTest.class.getResourceAsStream(sheet + ".yml"));
     }
 }

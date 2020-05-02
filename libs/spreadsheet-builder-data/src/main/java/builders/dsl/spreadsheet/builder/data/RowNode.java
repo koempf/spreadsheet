@@ -1,3 +1,20 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2020 Vladimir Orany.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package builders.dsl.spreadsheet.builder.data;
 
 import builders.dsl.spreadsheet.builder.api.CellDefinition;
@@ -30,7 +47,7 @@ class RowNode extends AbstractNode implements RowDefinition {
     public RowDefinition group(Consumer<RowDefinition> insideGroupDefinition) {
         RowNode rowNode = new RowNode();
         insideGroupDefinition.accept(rowNode);
-        node.add("cells", Collections.singletonMap("group", rowNode.getContent()));
+        node.add("cells", Collections.singletonMap("group", rowNode.getContent().get("cells")));
         return this;
     }
 
@@ -38,7 +55,7 @@ class RowNode extends AbstractNode implements RowDefinition {
     public RowDefinition collapse(Consumer<RowDefinition> insideGroupDefinition) {
         RowNode rowNode = new RowNode();
         insideGroupDefinition.accept(rowNode);
-        node.add("cells", Collections.singletonMap("collapse", rowNode.getContent()));
+        node.add("cells", Collections.singletonMap("collapse", rowNode.getContent().get("cells")));
         return this;
     }
 

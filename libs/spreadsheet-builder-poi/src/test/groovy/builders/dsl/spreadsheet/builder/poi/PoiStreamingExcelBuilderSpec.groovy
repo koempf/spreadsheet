@@ -24,8 +24,6 @@ import builders.dsl.spreadsheet.query.poi.PoiSpreadsheetCriteria
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
-import java.awt.Desktop
-
 class PoiStreamingExcelBuilderSpec extends AbstractBuilderSpec {
 
     @Rule TemporaryFolder tmp = new TemporaryFolder()
@@ -49,22 +47,6 @@ class PoiStreamingExcelBuilderSpec extends AbstractBuilderSpec {
     @Override
     protected void openSpreadsheet() {
         open tmpFile
-    }
-
-    /**
-     * Tries to open the file in Word. Only works locally on Mac at the moment. Ignored otherwise.
-     * Main purpose of this method is to quickly open the generated file for manual review.
-     * @param file file to be opened
-     */
-    private static void open(File file) {
-        try {
-            if (Desktop.desktopSupported && Desktop.desktop.isSupported(Desktop.Action.OPEN)) {
-                Desktop.desktop.open(file)
-                Thread.sleep(10000)
-            }
-        } catch (ignored) {
-            // CI
-        }
     }
 
 }

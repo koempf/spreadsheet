@@ -607,13 +607,18 @@ public class DataSpreadsheetParser {
     }
 
     private void handleStyles(HasStyle r, String path, Object value) {
+        List<String> styles = new ArrayList<>();
+        List<Consumer<CellStyleDefinition>> stylesDefinitions = new ArrayList<>();
+
         eachItemWithPath(value, path, (item, itemPath) -> {
             if (item instanceof String) {
-                r.style((String) item);
+                styles.add((String) item);
             } else {
-                withMap(item, itemPath, map -> r.style(style -> handleStyle(style, itemPath, map)));
+                withMap(item, itemPath, map -> stylesDefinitions.add(style -> handleStyle(style, itemPath, map)));
             }
         });
+
+        r.styles(styles, stylesDefinitions);
     }
 
     private void handleFont(FontDefinition f, String path, Map<String, Object> map) {
@@ -825,6 +830,9 @@ public class DataSpreadsheetParser {
     }
 
     private String asEnumName(Object value) {
+        if (String.valueOf(value).matches("^[A-Z_]+$")) {
+            return String.valueOf(value);
+        }
         return String.valueOf(value).replaceAll("(.)(\\p{Upper})", "$1_$2").toUpperCase();
     }
 

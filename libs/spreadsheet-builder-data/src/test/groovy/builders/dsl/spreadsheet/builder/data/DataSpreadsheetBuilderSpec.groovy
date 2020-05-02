@@ -15,38 +15,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.poi
+package builders.dsl.spreadsheet.builder.data
 
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder
+import builders.dsl.spreadsheet.builder.poi.PoiSpreadsheetBuilder
 import builders.dsl.spreadsheet.builder.tck.AbstractBuilderSpec
+import builders.dsl.spreadsheet.parser.data.json.JsonSpreadsheetParser
 import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria
 import builders.dsl.spreadsheet.query.poi.PoiSpreadsheetCriteria
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
+import spock.lang.Shared
 
-class PoiExcelBuilderSpec extends AbstractBuilderSpec {
+class DataSpreadsheetBuilderSpec extends AbstractBuilderSpec {
 
+    @Shared ObjectMapper mapper = new ObjectMapper()
     @Rule TemporaryFolder tmp = new TemporaryFolder()
 
-    File tmpFile
+    File spreadsheetFile
+    File jsonFile
+
+    DataSpreadsheetBuilder builder = DataSpreadsheetBuilder.create()
 
     void setup() {
-        tmpFile = tmp.newFile("sample${System.currentTimeMillis()}.xlsx")
+        spreadsheetFile = tmp.newFile("sample${System.currentTimeMillis()}.xlsx")
+        jsonFile = tmp.newFile("sample${System.currentTimeMillis()}.json")
     }
 
     @Override
     protected SpreadsheetCriteria createCriteria() {
-        return PoiSpreadsheetCriteria.FACTORY.forFile(tmpFile)
+        return PoiSpreadsheetCriteria.FACTORY.forFile(spreadsheetFile)
     }
 
     @Override
     protected SpreadsheetBuilder createSpreadsheetBuilder() {
-        return PoiSpreadsheetBuilder.create(tmpFile)
+        return builder
     }
 
     @Override
     protected void openSpreadsheet() {
-        open tmpFile
+        mapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, builder.data)
+
+        open jsonFile
+
+        SpreadsheetBuilder poiBuilder = PoiSpreadsheetBuilder.create(spreadsheetFile)
+        new JsonSpreadsheetParser(poiBuilder).parse(jsonFile.newInputStream())
+
+        open spreadsheetFile
     }
 
 }

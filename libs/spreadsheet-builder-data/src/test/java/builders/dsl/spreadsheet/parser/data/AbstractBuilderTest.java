@@ -273,9 +273,8 @@ public abstract class AbstractBuilderTest {
             });
         });
 
-        assertEquals(6, redOnes.getCells().size());
-        assertEquals(4, redOnes.getRows().size());
-
+        assertEquals(7, redOnes.getCells().size());
+        assertEquals(5, redOnes.getRows().size());
 
         SpreadsheetCriteriaResult boldOnes = matcher.query(w -> {
             w.sheet(s -> {

@@ -29,4 +29,5 @@ dependencies {
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
 
     testCompile project(':spreadsheet-builder-poi')
+    testCompile project(':spreadsheet-builder-tck-groovy')
 }

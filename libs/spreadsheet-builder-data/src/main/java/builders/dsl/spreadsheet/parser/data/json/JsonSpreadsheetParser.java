@@ -24,15 +24,15 @@ import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class JsonSpreadsheetBuilder {
+public class JsonSpreadsheetParser {
 
     private final DataSpreadsheetParser facade;
 
-    public JsonSpreadsheetBuilder(SpreadsheetBuilder builder) {
+    public JsonSpreadsheetParser(SpreadsheetBuilder builder) {
         facade = new DataSpreadsheetParser(builder);
     }
 
-    public void build(InputStream json) throws IOException {
+    public void parse(InputStream json) throws IOException {
         facade.build(new ObjectMapper().readValue(json, Object.class));
     }
 
