@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.data.json;
+package builders.dsl.spreadsheet.parser.data.json;
 
-import builders.dsl.spreadsheet.builder.data.DataSpreadsheetBuilder;
+import builders.dsl.spreadsheet.parser.data.DataSpreadsheetParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
 
@@ -26,10 +26,10 @@ import java.io.InputStream;
 
 public class JsonSpreadsheetBuilder {
 
-    private final DataSpreadsheetBuilder facade;
+    private final DataSpreadsheetParser facade;
 
     public JsonSpreadsheetBuilder(SpreadsheetBuilder builder) {
-        facade = new DataSpreadsheetBuilder(builder);
+        facade = new DataSpreadsheetParser(builder);
     }
 
     public void build(InputStream json) throws IOException {

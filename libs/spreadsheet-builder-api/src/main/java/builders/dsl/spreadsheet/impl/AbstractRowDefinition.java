@@ -56,27 +56,6 @@ public abstract class AbstractRowDefinition implements RowDefinition {
     protected abstract AbstractCellDefinition createCell(int zeroBasedCellNumber);
 
     @Override
-    public final RowDefinition cell() {
-        cell((Object)null);
-        return this;
-    }
-
-    @Override
-    public final RowDefinition cell(Object value) {
-        AbstractCellDefinition cell = findOrCreateCell(nextColNumber++);
-
-        if (!styles.isEmpty() || !styleDefinitions.isEmpty()) {
-            cell.styles(styles, styleDefinitions);
-        }
-
-        cell.value(value);
-
-        cell.resolve();
-
-        return this;
-    }
-
-    @Override
     public final RowDefinition cell(Consumer<CellDefinition> cellDefinition) {
         AbstractCellDefinition poiCell = findOrCreateCell(nextColNumber);
 
@@ -117,56 +96,12 @@ public abstract class AbstractRowDefinition implements RowDefinition {
     }
 
     @Override
-    public final RowDefinition cell(String column, Consumer<CellDefinition> cellDefinition) {
-        cell(Utils.parseColumn(column), cellDefinition);
-        return this;
-    }
-
-    @Override
-    public final RowDefinition style(Consumer<CellStyleDefinition> styleDefinition) {
-        styleDefinitions.add(styleDefinition);
-        return this;
-    }
-
-    @Override
-    public final RowDefinition style(String name) {
-        styles.add(name);
-        return this;
-    }
-
-    @Override
-    public final RowDefinition style(String name, Consumer<CellStyleDefinition> styleDefinition) {
-        style(name);
-        style(styleDefinition);
-        return this;
-    }
-
-    @Override
-    public final RowDefinition styles(Iterable<String> names, Consumer<CellStyleDefinition> styleDefinition) {
-        styles(names);
-        style(styleDefinition);
-        return this;
-    }
-
-    @Override
     public final RowDefinition styles(Iterable<String> styles, Iterable<Consumer<CellStyleDefinition>> styleDefinitions) {
-        this.styles(styles);
+        for (String name : styles) {
+            this.styles.add(name);
+        }
         for (Consumer<CellStyleDefinition> style : styleDefinitions) {
             this.styleDefinitions.add(style);
-        }
-        return this;
-    }
-
-    @Override
-    public final RowDefinition styles(String... names) {
-        styles.addAll(Arrays.asList(names));
-        return this;
-    }
-
-    @Override
-    public final RowDefinition styles(Iterable<String> names) {
-        for (String name : names) {
-            styles.add(name);
         }
         return this;
     }

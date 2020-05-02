@@ -15,15 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.data.json;
+package builders.dsl.spreadsheet.parser.data.yml;
 
+import builders.dsl.spreadsheet.parser.data.DataSpreadsheetParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
-import builders.dsl.spreadsheet.builder.data.AbstractBuilderTest;
 
-public class JsonSpreadsheetBuilderTest extends AbstractBuilderTest {
+import java.io.IOException;
+import java.io.InputStream;
 
-    @Override
-    protected void build(SpreadsheetBuilder builder, String sheet) throws Exception {
-        new JsonSpreadsheetBuilder(builder).build(JsonSpreadsheetBuilderTest.class.getResourceAsStream(sheet + ".json"));
+public class YmlSpreadsheetBuilder {
+    private final DataSpreadsheetParser facade;
+
+    public YmlSpreadsheetBuilder(SpreadsheetBuilder builder) {
+        facade = new DataSpreadsheetParser(builder);
+    }
+
+    public void build(InputStream json) throws IOException {
+        facade.build(new ObjectMapper(new YAMLFactory()).readValue(json, Object.class));
     }
 }

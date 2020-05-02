@@ -127,6 +127,7 @@ class PoiCellDefinition extends AbstractCellDefinition {
         return this;
     }
 
+    @Override
     public ImageCreator png(Keywords.Image image) {
         return createImageConfigurer(Workbook.PICTURE_TYPE_PNG);
     }

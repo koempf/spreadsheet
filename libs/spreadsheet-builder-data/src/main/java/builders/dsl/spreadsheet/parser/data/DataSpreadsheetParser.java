@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.data;
+package builders.dsl.spreadsheet.parser.data;
 
 import builders.dsl.spreadsheet.api.BorderStyle;
 import builders.dsl.spreadsheet.api.Color;
@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 
 // TODO: apply "stylesheet" from list of styles
 
-public class DataSpreadsheetBuilder {
+public class DataSpreadsheetParser {
 
     private static final List<String> REQUIRES_NAME = Collections.singletonList("name");
     private static final Pattern DIMENSION_IN_POINTS = Pattern.compile("(\\d+)\\s?(p(oin)?ts?)?");
@@ -70,7 +70,7 @@ public class DataSpreadsheetBuilder {
 
     private final SpreadsheetBuilder builder;
 
-    public DataSpreadsheetBuilder(SpreadsheetBuilder builder) {
+    public DataSpreadsheetParser(SpreadsheetBuilder builder) {
         this.builder = builder;
     }
 
@@ -233,7 +233,7 @@ public class DataSpreadsheetBuilder {
                     handleFreeze(s, entryPath, value);
                     break;
                 case "page":
-                    withMap(value, entryPath, (page) -> s.page(p -> handlePage(p, entryPath, page)));
+                    withMap(value, entryPath, page -> s.page(p -> handlePage(p, entryPath, page)));
                     break;
                 case "password":
                     s.password(String.valueOf(value));
@@ -309,7 +309,7 @@ public class DataSpreadsheetBuilder {
         AtomicInteger row = new AtomicInteger(0);
         AtomicInteger column = new AtomicInteger(0);
         AtomicReference<String> columnAsString = new AtomicReference<>();
-        withMap(freeze, path, (map) -> handleMap(path, map, (entryPath, key, value) -> {
+        withMap(freeze, path, map -> handleMap(path, map, (entryPath, key, value) -> {
             switch (key) {
                 case "row":
                     handleNumber(entryPath, value, number -> row.set(number.intValue()));
@@ -439,14 +439,14 @@ public class DataSpreadsheetBuilder {
         if (value instanceof Iterable) {
             eachItemWithPath(value, entryPath, (item, itemPath) -> {
                 if (item instanceof Map) {
-                    withMap(item, itemPath, Collections.singletonList("content"), (map) -> {
+                    withMap(item, itemPath, Collections.singletonList("content"), map -> {
                         Object font = map.get("font");
                         String content = String.valueOf(map.get("content"));
                         if (font == null) {
                             c.text(content);
                         } else {
                             String fontPath = itemPath + "." + "font";
-                            withMap(font, fontPath, (fontMap) -> c.text(content, f -> handleFont(f, fontPath, fontMap)));
+                            withMap(font, fontPath, fontMap -> c.text(content, f -> handleFont(f, fontPath, fontMap)));
                         }
                     });
                 } else {

@@ -412,11 +412,11 @@ abstract class AbstractBuilderSpec extends Specification {
                 }
             }
         then:
-            !isFillSupported() || filledCells
-            !isFillSupported() || filledCells.size() == 1
+            !fillSupported || filledCells
+            !fillSupported || filledCells.size() == 1
 
         expect:
-            !isVeryHiddenSupported() || matcher.query {
+            !veryHiddenSupported || matcher.query {
                 sheet('Very hidden') {
                     state veryHidden
                 }

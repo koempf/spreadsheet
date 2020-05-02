@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.data.yml;
+package builders.dsl.spreadsheet.parser.data.json;
 
 import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
-import builders.dsl.spreadsheet.builder.data.AbstractBuilderTest;
+import builders.dsl.spreadsheet.parser.data.AbstractBuilderTest;
 
-public class YmlSpreadsheetBuilderTest extends AbstractBuilderTest {
+public class JsonSpreadsheetBuilderTest extends AbstractBuilderTest {
 
     @Override
     protected void build(SpreadsheetBuilder builder, String sheet) throws Exception {
-        new YmlSpreadsheetBuilder(builder).build(YmlSpreadsheetBuilderTest.class.getResourceAsStream(sheet + ".yml"));
+        new JsonSpreadsheetBuilder(builder).build(JsonSpreadsheetBuilderTest.class.getResourceAsStream(sheet + ".json"));
     }
 }

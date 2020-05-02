@@ -39,16 +39,6 @@ public abstract class AbstractWorkbookDefinition implements WorkbookDefinition {
     }
 
     @Override
-    public final WorkbookDefinition apply(Class<? extends Stylesheet> stylesheet) {
-        try {
-            apply(stylesheet.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return this;
-    }
-
-    @Override
     public final WorkbookDefinition apply(Stylesheet stylesheet) {
         stylesheet.declareStyles(this);
         return this;

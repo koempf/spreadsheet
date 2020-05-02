@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.data;
+package builders.dsl.spreadsheet.parser.data;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

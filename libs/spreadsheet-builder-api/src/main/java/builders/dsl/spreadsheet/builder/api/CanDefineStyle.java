@@ -27,6 +27,14 @@ public interface CanDefineStyle {
      */
     CanDefineStyle style(String name, Consumer<CellStyleDefinition> styleDefinition);
 
-    CanDefineStyle apply(Class<? extends Stylesheet> stylesheet);
+    default CanDefineStyle apply(Class<? extends Stylesheet> stylesheet) {
+        try {
+            apply(stylesheet.newInstance());
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Cannot create  new instance of " + stylesheet, e);
+        }
+        return this;
+    }
+
     CanDefineStyle apply(Stylesheet stylesheet);
 }

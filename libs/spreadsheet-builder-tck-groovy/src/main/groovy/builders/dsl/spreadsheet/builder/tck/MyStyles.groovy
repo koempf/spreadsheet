@@ -19,10 +19,12 @@ package builders.dsl.spreadsheet.builder.tck
 
 import builders.dsl.spreadsheet.builder.api.CanDefineStyle
 import builders.dsl.spreadsheet.builder.api.Stylesheet
+import groovy.transform.CompileStatic
 
 @SuppressWarnings([
         'DuplicateStringLiteral'
 ])
+@CompileStatic
 class MyStyles implements Stylesheet {
 
     void declareStyles(CanDefineStyle stylable) {

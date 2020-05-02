@@ -44,12 +44,6 @@ public abstract class AbstractSheetDefinition implements SheetDefinition, Resolv
         return workbook;
     }
 
-    @Override
-    public final SheetDefinition row() {
-        findOrCreateRow(nextRowNumber++);
-        return this;
-    }
-
     private RowDefinition findOrCreateRow(int zeroBasedRowNumber) {
         AbstractRowDefinition row = rows.get(zeroBasedRowNumber + 1);
 

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package builders.dsl.spreadsheet.builder.data;
+package builders.dsl.spreadsheet.parser.data;
 
 public class InvalidPropertyException extends RuntimeException {
 

@@ -24,7 +24,10 @@ public interface WorkbookDefinition extends CanDefineStyle {
     WorkbookDefinition sheet(String name, Consumer<SheetDefinition> sheetDefinition);
     WorkbookDefinition style(String name, Consumer<CellStyleDefinition> styleDefinition);
 
-    WorkbookDefinition apply(Class<? extends Stylesheet> stylesheet);
+    default WorkbookDefinition apply(Class<? extends Stylesheet> stylesheet) {
+        return (WorkbookDefinition) CanDefineStyle.super.apply(stylesheet);
+    }
+
     WorkbookDefinition apply(Stylesheet stylesheet);
 
 }

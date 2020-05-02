@@ -28,7 +28,9 @@ public interface SheetDefinition extends SheetStateProvider {
     /**
      * Crates new empty row.
      */
-    SheetDefinition row();
+    default SheetDefinition row() {
+        return row(r ->{});
+    }
 
     /**
      * Creates new row in the spreadsheet.
