@@ -78,11 +78,6 @@ public abstract class AbstractSheetDefinition implements SheetDefinition, Resolv
     }
 
     @Override
-    public final SheetDefinition freeze(String column, int row) {
-        return freeze(Utils.parseColumn(column), row);
-    }
-
-    @Override
     public final SheetDefinition freeze(int column, int row) {
         doFreeze(column, row);
         return this;

@@ -28,6 +28,9 @@ public interface WorkbookDefinition extends CanDefineStyle {
         return (WorkbookDefinition) CanDefineStyle.super.apply(stylesheet);
     }
 
-    WorkbookDefinition apply(Stylesheet stylesheet);
+    default WorkbookDefinition apply(Stylesheet stylesheet) {
+        stylesheet.declareStyles(this);
+        return this;
+    }
 
 }
