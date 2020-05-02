@@ -17,12 +17,24 @@
  */
 package builders.dsl.spreadsheet.builder.data;
 
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import builders.dsl.spreadsheet.api.*;
-import builders.dsl.spreadsheet.builder.api.*;
+import builders.dsl.spreadsheet.api.BorderStyle;
+import builders.dsl.spreadsheet.api.Color;
+import builders.dsl.spreadsheet.api.FontStyle;
+import builders.dsl.spreadsheet.api.ForegroundFill;
+import builders.dsl.spreadsheet.api.Keywords;
+import builders.dsl.spreadsheet.builder.api.BorderDefinition;
+import builders.dsl.spreadsheet.builder.api.CellDefinition;
+import builders.dsl.spreadsheet.builder.api.CellStyleDefinition;
+import builders.dsl.spreadsheet.builder.api.CommentDefinition;
+import builders.dsl.spreadsheet.builder.api.DimensionModifier;
+import builders.dsl.spreadsheet.builder.api.FontDefinition;
+import builders.dsl.spreadsheet.builder.api.HasStyle;
+import builders.dsl.spreadsheet.builder.api.ImageCreator;
+import builders.dsl.spreadsheet.builder.api.PageDefinition;
+import builders.dsl.spreadsheet.builder.api.RowDefinition;
+import builders.dsl.spreadsheet.builder.api.SheetDefinition;
+import builders.dsl.spreadsheet.builder.api.SpreadsheetBuilder;
+import builders.dsl.spreadsheet.builder.api.WorkbookDefinition;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,8 +42,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -45,7 +62,7 @@ import java.util.regex.Pattern;
 
 public class DataSpreadsheetBuilder {
 
-    private static final ImmutableList<String> REQUIRES_NAME = ImmutableList.of("name");
+    private static final List<String> REQUIRES_NAME = Collections.singletonList("name");
     private static final Pattern DIMENSION_IN_POINTS = Pattern.compile("(\\d+)\\s?(p(oin)?ts?)?");
     private static final Pattern DIMENSION_IN_CM = Pattern.compile("(\\d+)\\s?cm");
     private static final Pattern DIMENSION_IN_INCHES = Pattern.compile("(\\d+)\\s?in(ch(es)?)?");
@@ -97,7 +114,7 @@ public class DataSpreadsheetBuilder {
         if (!(value instanceof Iterable)) {
             throw new InvalidPropertyException("Value must be iterable!", path, value);
         }
-        Iterable iterable = (Iterable) value;
+        Iterable<?> iterable = (Iterable<?>) value;
         int index = 0;
         for (Object item : iterable) {
             consumer.accept(item, index++);
@@ -112,7 +129,7 @@ public class DataSpreadsheetBuilder {
     }
 
     private static void withMap(Object value, String path, Consumer<Map<String, Object>> consumer) {
-        withMap(value, path, ImmutableList.of(), consumer);
+        withMap(value, path, Collections.emptyList(), consumer);
     }
 
     private static void withMap(Object value, String path, Iterable<String> requiredProperties, Consumer<Map<String, Object>> consumer) {
@@ -124,7 +141,7 @@ public class DataSpreadsheetBuilder {
             throw new InvalidPropertyException("Definition must be map", path, value);
         }
 
-        Map map = (Map) value;
+        Map<?, ?> map = (Map<?, ?>) value;
         for (String requiredProperty: requiredProperties) {
             if (!map.containsKey(requiredProperty)) {
                 throw new InvalidPropertyException("Definition is missing '" + requiredProperty + "' property", path, value);
@@ -141,7 +158,10 @@ public class DataSpreadsheetBuilder {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({
+            "unchecked",
+            "rawtypes"
+    })
     private static Map<String, Object> checkedMap(Map map) {
         return Collections.checkedMap(map, String.class, Object.class);
     }
@@ -151,13 +171,14 @@ public class DataSpreadsheetBuilder {
     }
 
     public void build(Iterable<Map<String, Object>> value) {
-        build(ImmutableMap.of("sheets", value));
+        build(Collections.singletonMap("sheets", value));
     }
 
     public void build(final Map<String, Object> definitionMap) {
         this.builder.build(w -> handleWorkbook(w, definitionMap));
     }
 
+    @SuppressWarnings("unchecked")
     public void build(Object value) {
         if (value == null) {
             throw new InvalidPropertyException("No Data", "", null);
@@ -182,7 +203,10 @@ public class DataSpreadsheetBuilder {
                         if (item instanceof Map) {
                             withMap(item, itemPath, REQUIRES_NAME, sheet -> handleSheet(w, itemPath, sheet));
                         } else {
-                            handleSheet(w, itemPath, ImmutableMap.of("rows", item, "name", "Sheet1"));
+                            Map<String, Object> sheet = new HashMap<>();
+                            sheet.put("rows", item);
+                            sheet.put("name", "Sheet1");
+                            handleSheet(w, itemPath, sheet);
                         }
                     });
                     break;
@@ -192,8 +216,8 @@ public class DataSpreadsheetBuilder {
         }
     }
 
-    private WorkbookDefinition handleSheet(WorkbookDefinition w, String localPath, Map<String, Object> map) {
-        return w.sheet(String.valueOf(map.get("name")), s -> handleSheet(s, localPath, map));
+    private void handleSheet(WorkbookDefinition w, String localPath, Map<String, Object> map) {
+        w.sheet(String.valueOf(map.get("name")), s -> handleSheet(s, localPath, map));
     }
 
     private void handleSheet(SheetDefinition s, String path, Map<String, Object> map) {
@@ -233,9 +257,9 @@ public class DataSpreadsheetBuilder {
     private void handleRows(SheetDefinition s, String path, Object value) {
         eachItemWithPath(value, path, (item, itemPath) -> {
             if (item instanceof Map) {
-                withMap(item, itemPath, ImmutableList.of(), row -> handleRow(s, itemPath, row));
+                withMap(item, itemPath, Collections.emptyList(), row -> handleRow(s, itemPath, row));
             } else if (item instanceof Iterable) {
-                handleRow(s, itemPath, ImmutableMap.of("cells", item));
+                handleRow(s, itemPath, Collections.singletonMap("cells", item));
             }
         });
     }
@@ -310,9 +334,9 @@ public class DataSpreadsheetBuilder {
 
     private void handleRow(SheetDefinition s, String path, Map<String, Object> row) {
         if (row.containsKey("group") && row.size() == 1) {
-            s.group(group -> eachItemAsMap(row.get("group"), path + "." + "group", ImmutableList.of(), (item, itemPath) -> handleRow(group, itemPath, item)));
+            s.group(group -> eachItemAsMap(row.get("group"), path + "." + "group", Collections.emptyList(), (item, itemPath) -> handleRow(group, itemPath, item)));
         } else if (row.containsKey("collapse") && row.size() == 1) {
-            s.collapse(collapse -> eachItemAsMap(row.get("collapse"), path + "." + "collapse", ImmutableList.of(), (item, itemPath) -> handleRow(collapse, itemPath, item)));
+            s.collapse(collapse -> eachItemAsMap(row.get("collapse"), path + "." + "collapse", Collections.emptyList(), (item, itemPath) -> handleRow(collapse, itemPath, item)));
         } else if (row.containsKey("number")) {
             handleNumber(path, row.get("number"), number -> s.row(number.intValue(), r -> handleRow(r, path, row)));
         } else {
@@ -415,16 +439,14 @@ public class DataSpreadsheetBuilder {
         if (value instanceof Iterable) {
             eachItemWithPath(value, entryPath, (item, itemPath) -> {
                 if (item instanceof Map) {
-                    withMap(item, itemPath, ImmutableList.of("content"), (map) -> {
+                    withMap(item, itemPath, Collections.singletonList("content"), (map) -> {
                         Object font = map.get("font");
                         String content = String.valueOf(map.get("content"));
                         if (font == null) {
                             c.text(content);
                         } else {
                             String fontPath = itemPath + "." + "font";
-                            withMap(font, fontPath, (fontMap) -> {
-                                c.text(content, f -> handleFont(f, fontPath, fontMap));
-                            });
+                            withMap(font, fontPath, (fontMap) -> c.text(content, f -> handleFont(f, fontPath, fontMap)));
                         }
                     });
                 } else {
@@ -437,22 +459,20 @@ public class DataSpreadsheetBuilder {
     }
 
     private void handleCellImage(CellDefinition c, String path, Object image) {
-        ImmutableMap.Builder<String, Function<Keywords.Image, ImageCreator>> builder = ImmutableMap.builder();
-        builder.put("png", c::png);
-        builder.put("jpeg", c::jpeg);
-        builder.put("jpg", c::jpeg);
-        builder.put("pict", c::pict);
-        builder.put("emf", c::emf);
-        builder.put("wmf", c::wmf);
-        builder.put("dib", c::dib);
-
-        ImmutableMap<String, Function<Keywords.Image, ImageCreator>> imageCreators = builder.build();
+        Map<String, Function<Keywords.Image, ImageCreator>> imageCreators = new LinkedHashMap<>();
+        imageCreators.put("png", c::png);
+        imageCreators.put("jpeg", c::jpeg);
+        imageCreators.put("jpg", c::jpeg);
+        imageCreators.put("pict", c::pict);
+        imageCreators.put("emf", c::emf);
+        imageCreators.put("wmf", c::wmf);
+        imageCreators.put("dib", c::dib);
 
         if (image instanceof Map) {
-            withMap(image, path, ImmutableList.of("url", "type"), map -> {
+            withMap(image, path, Arrays.asList("url", "type"), map -> {
                 String type = String.valueOf(map.get("type")).toLowerCase();
                 String url = String.valueOf(map.get("url"));
-                if (!imageCreators.keySet().contains(type)) {
+                if (!imageCreators.containsKey(type)) {
                     throw new InvalidPropertyException("Unknown image type", path + "." + "type", type);
                 }
                 try {
@@ -485,7 +505,7 @@ public class DataSpreadsheetBuilder {
         }
 
         if (!linkCreated) {
-            throw new InvalidPropertyException("Could not determine image type. Please be sure that the URL ends with one of following extensions: " + Joiner.on(",").join(imageCreators.keySet()), path, url);
+            throw new InvalidPropertyException("Could not determine image type. Please be sure that the URL ends with one of following extensions: " + String.join(",", imageCreators.keySet()), path, url);
         }
     }
 
@@ -680,17 +700,15 @@ public class DataSpreadsheetBuilder {
             s.border(b -> handleBorder(b, path, map));
             return;
         }
-        ImmutableList.Builder<Keywords.BorderSide> sidesBuilder = ImmutableList.builder();
+        List<Keywords.BorderSide> sides = new ArrayList<>();
 
         Object value = map.get(key);
 
         if (!(value instanceof Iterable)) {
-            value = ImmutableList.of(value);
+            value = Collections.singletonList(value);
         }
 
-        eachItemWithIndex(value, path + "." + key, (item, index) -> sidesBuilder.add(readFakeEnumValue(path + "." + key + "[" + index + "]", item, Keywords.BorderSide.class)));
-
-        ImmutableList<Keywords.BorderSide> sides = sidesBuilder.build();
+        eachItemWithIndex(value, path + "." + key, (item, index) -> sides.add(readFakeEnumValue(path + "." + key + "[" + index + "]", item, Keywords.BorderSide.class)));
 
         if (sides.size() == 4 || sides.isEmpty()) {
             s.border(b -> handleBorder(b, path, map));
@@ -716,13 +734,13 @@ public class DataSpreadsheetBuilder {
                     handleBase(s, value);
                     break;
                 case "borders":
-                    eachItemAsMap(value, entryPath, ImmutableList.of(), (border, localPath) -> handleBorder(s, localPath, border));
+                    eachItemAsMap(value, entryPath, Collections.emptyList(), (border, localPath) -> handleBorder(s, localPath, border));
                     break;
                 case "fill":
                     handleFill(s, value);
                     break;
                 case "font":
-                    withMap(value, entryPath,  ImmutableList.of(), (font, localPath) -> s.font(f -> handleFont(f, localPath, font)));
+                    withMap(value, entryPath,  Collections.emptyList(), (font, localPath) -> s.font(f -> handleFont(f, localPath, font)));
                     break;
                 case "foreground":
                     handleForeground(entryPath, s, value);
@@ -807,13 +825,11 @@ public class DataSpreadsheetBuilder {
     }
 
     private String asEnumName(Object value) {
-        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, String.valueOf(value));
+        return String.valueOf(value).replaceAll("(.)(\\p{Upper})", "$1_$2").toUpperCase();
     }
-
 
     @FunctionalInterface private interface MapEntryHandler {
         void handle(String entryPath, String key, Object value);
     }
-
 
 }
