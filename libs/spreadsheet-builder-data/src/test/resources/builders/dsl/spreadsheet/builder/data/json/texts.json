@@ -1,0 +1,17 @@
+[
+  [
+    [
+      {
+        "text": [
+          "Hello ",
+          {
+            "content": "World",
+            "font": {
+              "styles": ["bold"]
+            }
+          }
+        ]
+      }
+    ]
+  ]
+]
