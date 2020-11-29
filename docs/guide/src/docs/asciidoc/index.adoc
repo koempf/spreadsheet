@@ -1,7 +1,7 @@
 = Spreadsheet Builder
 
 [.ribbon]
-image::ribbon.png[link={projectUrl}]
+image::ribbon.png[link={project-url}]
 
 Spreadsheet builder provides convenient way how to read and create MS Excel OfficeOpenXML
 Documents (XSLX) focus not only on content side but also on easy styling.
