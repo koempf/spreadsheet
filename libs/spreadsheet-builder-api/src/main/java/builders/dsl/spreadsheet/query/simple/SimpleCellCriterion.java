@@ -22,7 +22,9 @@ import builders.dsl.spreadsheet.api.Comment;
 import builders.dsl.spreadsheet.query.api.CellCriterion;
 import builders.dsl.spreadsheet.query.api.CellStyleCriterion;
 import java.util.function.Predicate;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -46,8 +48,44 @@ final class SimpleCellCriterion extends AbstractCriterion<Cell, CellCriterion> i
         addValueCondition(predicate, Date.class);
         return this;
     }
-
+    
     @Override
+	public CellCriterion localDate(LocalDate value) {
+    	addValueCondition(value, LocalDate.class);
+		return this;
+	}
+
+	@Override
+	public CellCriterion localDate(Predicate<LocalDate> predicate) {
+		addValueCondition(predicate, LocalDate.class);
+		return this;
+	}
+
+	@Override
+	public CellCriterion localDateTime(LocalDateTime value) {
+		addValueCondition(value, LocalDateTime.class);
+		return this;
+	}
+
+	@Override
+	public CellCriterion localDateTime(Predicate<LocalDateTime> predicate) {
+		addValueCondition(predicate, LocalDateTime.class);
+		return this;
+	}
+
+	@Override
+	public CellCriterion localTime(LocalTime value) {
+		addValueCondition(value, LocalTime.class);
+		return this;
+	}
+
+	@Override
+	public CellCriterion localTime(Predicate<LocalTime> predicate) {
+		addValueCondition(predicate, LocalTime.class);
+		return this;
+	}
+
+	@Override
     public SimpleCellCriterion number(Double value) {
         addValueCondition(value, Double.class);
         return this;

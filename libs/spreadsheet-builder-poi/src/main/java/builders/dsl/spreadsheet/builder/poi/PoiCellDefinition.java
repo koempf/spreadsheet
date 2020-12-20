@@ -22,7 +22,9 @@ import builders.dsl.spreadsheet.builder.api.*;
 import builders.dsl.spreadsheet.impl.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 class PoiCellDefinition extends AbstractCellDefinition {
@@ -53,7 +55,22 @@ class PoiCellDefinition extends AbstractCellDefinition {
             cell.setCellValue((Calendar) value);
             return this;
         }
+        
+        if (value instanceof LocalDate) {
+        	cell.setCellValue((LocalDate) value);
+        	return this;
+        }
+        
+        if (value instanceof LocalTime) {
+        	cell.setCellValue(LocalDateTime.of(LocalDate.of(1900, 1, 1), (LocalTime) value));
+        	return this;
+        }
 
+        if (value instanceof LocalDateTime) {
+        	cell.setCellValue((LocalDateTime) value);
+        	return this;
+        }
+        
         if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
             return this;

@@ -31,6 +31,9 @@ import builders.dsl.spreadsheet.query.poi.PoiSpreadsheetCriteria;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -71,15 +74,18 @@ public class Java8BuilderTest {
 
     @Test public void testBuilderFull() throws IOException, InvalidFormatException {
         Date today = new Date();
+        LocalDate localDate = LocalDate.of(2019,9,1);
+        LocalDateTime localDateTime = LocalDateTime.of(2019,9,1,10,33);
+        LocalTime localTime = LocalTime.of(10,33,0);
         File excel = tmp.newFile();
 
-        buildSpreadsheet(PoiSpreadsheetBuilder.create(excel), today);
+        buildSpreadsheet(PoiSpreadsheetBuilder.create(excel), today, localDate, localTime, localDateTime);
 
         SpreadsheetCriteria matcher = PoiSpreadsheetCriteria.FACTORY.forFile(excel);
 
         SpreadsheetCriteriaResult allCells = matcher.all();
 
-        assertEquals(80130, allCells.getCells().size());
+        assertEquals(80133, allCells.getCells().size());
         assertEquals(21, allCells.getSheets().size());
         assertEquals(20065, allCells.getRows().size());
 
@@ -137,7 +143,65 @@ public class Java8BuilderTest {
 
         assertEquals(1, someCells.getCells().size());
 
+        SpreadsheetCriteriaResult localDateCells = matcher.query(w ->
+        w.sheet(s ->
+           s.row(r ->
+               r.cell(c ->
+                  c.localDate(localDate)
+               )
+           )
+        		)
+        );
+        // This should return  localDate and localDateTime cells
+        assertEquals(2, localDateCells.getCells().size());
+        
+        
+        SpreadsheetCriteriaResult onlyLocalDateCells = matcher.query(w ->
+        w.sheet(s ->
+           s.row(r ->
+               r.cell(c ->
+                  c.localDate(localDate).and(c.localTime(LocalTime.of(0, 0)))
+               )
+           )
+        		)
+        );
+        assertEquals(1, onlyLocalDateCells.getCells().size());
+        
+        SpreadsheetCriteriaResult localTimeCells = matcher.query(w ->
+        w.sheet(s ->
+           s.row(r ->
+               r.cell(c ->
+                  c.localTime(localTime)
+               )
+           )
+        		)
+        );
+        // This should return  localTime and localDateTime cells
+        assertEquals(2, localTimeCells.getCells().size());
+        
+        SpreadsheetCriteriaResult onlyLocalTimeCells = matcher.query(w ->
+        w.sheet(s ->
+           s.row(r ->
+               r.cell(c ->
+                  c.localTime(localTime).and(c.localDate(LocalDate.of(1900, 1, 1)))
+               )
+           )
+        		)
+        );
+        assertEquals(1, onlyLocalTimeCells.getCells().size());
+        
+        SpreadsheetCriteriaResult localDateTimeCells = matcher.query(w ->
+        w.sheet(s ->
+           s.row(r ->
+               r.cell(c ->
+                  c.localDateTime(localDateTime)
+               )
+           )
+        		)
+        );
+        assertEquals(1, localDateTimeCells.getCells().size());
 
+        
         SpreadsheetCriteriaResult commentedCells = matcher.query(w ->
             w.sheet(s ->
                 s.row(r ->
@@ -176,7 +240,7 @@ public class Java8BuilderTest {
             });
         });
 
-        assertEquals(1, dateCells.getCells().size());
+        assertEquals(2, dateCells.getCells().size());
 
         SpreadsheetCriteriaResult filledCells = matcher.query(w -> {
             w.sheet(s -> {
@@ -470,7 +534,7 @@ public class Java8BuilderTest {
         }).getCells().size());
     }
 
-    private static void buildSpreadsheet(SpreadsheetBuilder builder, Date today) {
+    private static void buildSpreadsheet(SpreadsheetBuilder builder, Date today, LocalDate localDate, LocalTime localTime, LocalDateTime localDateTime) {
         builder.build(w -> {
             w.style("red", s -> {
                 s.font(f -> {
@@ -762,6 +826,30 @@ public class Java8BuilderTest {
                         c.comment("This is a date!");
                         c.colspan(5);
                         c.rowspan(2);
+                    });
+                    r.cell(c -> {
+                        c.style(st -> {
+                            st.format("d.m.y");
+                            st.align(Keywords.center, Keywords.center);
+                        });
+                        c.value(localDate);
+                        c.comment("This is a local date!");
+                    });
+                    r.cell(c -> {
+                        c.style(st -> {
+                            st.format("d.m.y hh:mm");
+                            st.align(Keywords.center, Keywords.center);
+                        });
+                        c.value(localDateTime);
+                        c.comment("This is a local date time!");
+                    });
+                    r.cell(c -> {
+                        c.style(st -> {
+                            st.format("hh:mm");
+                            st.align(Keywords.center, Keywords.center);
+                        });
+                        c.value(localTime);
+                        c.comment("This is a local time!");
                     });
                 });
             });
