@@ -44,7 +44,7 @@ public final class SimpleSpreadsheetCriteria implements SpreadsheetCriteria {
 
     @Override
     public SpreadsheetCriteriaResult all() {
-        return queryInternal(Integer.MAX_VALUE, (w) -> {});
+        return queryInternal(Integer.MAX_VALUE, w -> {});
     }
 
     @Override

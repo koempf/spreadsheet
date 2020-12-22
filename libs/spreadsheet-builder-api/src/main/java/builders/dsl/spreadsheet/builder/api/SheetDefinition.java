@@ -20,6 +20,7 @@ package builders.dsl.spreadsheet.builder.api;
 
 import builders.dsl.spreadsheet.api.Keywords;
 import builders.dsl.spreadsheet.api.SheetStateProvider;
+import builders.dsl.spreadsheet.impl.Utils;
 
 import java.util.function.Consumer;
 
@@ -28,7 +29,9 @@ public interface SheetDefinition extends SheetStateProvider {
     /**
      * Crates new empty row.
      */
-    SheetDefinition row();
+    default SheetDefinition row() {
+        return row(r ->{});
+    }
 
     /**
      * Creates new row in the spreadsheet.
@@ -55,7 +58,9 @@ public interface SheetDefinition extends SheetStateProvider {
      * @param column last freeze column
      * @param row last freeze row
      */
-    SheetDefinition freeze(String column, int row);
+    default SheetDefinition freeze(String column, int row) {
+        return freeze(Utils.parseColumn(column), row);
+    }
 
     SheetDefinition group(Consumer<SheetDefinition> insideGroupDefinition);
     SheetDefinition collapse(Consumer<SheetDefinition> insideGroupDefinition);

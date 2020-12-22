@@ -19,6 +19,8 @@ package builders.dsl.spreadsheet.builder.api;
 
 import builders.dsl.spreadsheet.api.Keywords;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public interface CellDefinition extends HasStyle {
@@ -30,7 +32,12 @@ public interface CellDefinition extends HasStyle {
     CellDefinition value(Object value);
     CellDefinition name(String name);
     CellDefinition formula(String formula);
-    CellDefinition comment(String comment);
+
+    default CellDefinition comment(final String commentText) {
+        comment(commentDefinition -> commentDefinition.text(commentText));
+        return this;
+    }
+
     CellDefinition comment(Consumer<CommentDefinition> commentDefinition);
 
     LinkDefinition link(Keywords.To to);
@@ -91,12 +98,30 @@ public interface CellDefinition extends HasStyle {
     ImageCreator wmf(Keywords.Image image);
     ImageCreator dib(Keywords.Image image);
 
-    CellDefinition style(String name, Consumer<CellStyleDefinition> styleDefinition);
-    CellDefinition styles(Iterable<String> names, Consumer<CellStyleDefinition> styleDefinition);
     CellDefinition styles(Iterable<String> styles, Iterable<Consumer<CellStyleDefinition>> styleDefinitions);
-    CellDefinition style(Consumer<CellStyleDefinition> styleDefinition);
-    CellDefinition style(String name);
-    CellDefinition styles(String... names);
-    CellDefinition styles(Iterable<String> names);
+
+    default CellDefinition style(String name) {
+        return styles(Collections.singleton(name), Collections.<Consumer<CellStyleDefinition>>emptyList());
+    }
+
+    default CellDefinition styles(String... names) {
+        return styles(Arrays.asList(names), Collections.<Consumer<CellStyleDefinition>>emptyList());
+    }
+
+    default CellDefinition style(Consumer<CellStyleDefinition> styleDefinition) {
+        return styles(Collections.<String>emptyList(), Collections.singleton(styleDefinition));
+    }
+
+    default CellDefinition styles(Iterable<String> names) {
+        return styles(names, Collections.<Consumer<CellStyleDefinition>>emptyList());
+    }
+
+    default CellDefinition style(String name, Consumer<CellStyleDefinition> styleDefinition) {
+        return styles(Collections.singleton(name), Collections.singleton(styleDefinition));
+    }
+
+    default CellDefinition styles(Iterable<String> names, Consumer<CellStyleDefinition> styleDefinition) {
+        return styles(names, Collections.singleton(styleDefinition));
+    }
 
 }

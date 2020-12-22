@@ -31,12 +31,6 @@ public abstract class AbstractCellDefinition implements CellDefinition, Resolvab
     }
 
     @Override
-    public final CellDefinition comment(final String commentText) {
-        comment(commentDefinition -> commentDefinition.text(commentText));
-        return this;
-    }
-
-    @Override
     public final CellDefinition formula(String formula) {
         row.getSheet().getWorkbook().addPendingFormula(createPendingFormula(formula));
         return this;
@@ -64,35 +58,6 @@ public abstract class AbstractCellDefinition implements CellDefinition, Resolvab
         return this;
     }
 
-    @Override
-    public final CellDefinition style(String name) {
-        return styles(Collections.singleton(name), Collections.<Consumer<CellStyleDefinition>>emptyList());
-    }
-
-    @Override
-    public final CellDefinition styles(String... names) {
-        return styles(Arrays.asList(names), Collections.<Consumer<CellStyleDefinition>>emptyList());
-    }
-
-    @Override
-    public final CellDefinition style(Consumer<CellStyleDefinition> styleDefinition) {
-        return styles(Collections.<String>emptyList(), Collections.singleton(styleDefinition));
-    }
-
-    @Override
-    public final CellDefinition styles(Iterable<String> names) {
-        return styles(names, Collections.<Consumer<CellStyleDefinition>>emptyList());
-    }
-
-    @Override
-    public final CellDefinition style(String name, Consumer<CellStyleDefinition> styleDefinition) {
-        return styles(Collections.singleton(name), Collections.singleton(styleDefinition));
-    }
-
-    @Override
-    public final CellDefinition styles(Iterable<String> names, Consumer<CellStyleDefinition> styleDefinition) {
-        return styles(names, Collections.singleton(styleDefinition));
-    }
 
     @Override
     public final CellDefinition styles(Iterable<String> names, Iterable<Consumer<CellStyleDefinition>> styleDefinition) {

@@ -38,22 +38,6 @@ public abstract class AbstractWorkbookDefinition implements WorkbookDefinition {
         return this;
     }
 
-    @Override
-    public final WorkbookDefinition apply(Class<? extends Stylesheet> stylesheet) {
-        try {
-            apply(stylesheet.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return this;
-    }
-
-    @Override
-    public final WorkbookDefinition apply(Stylesheet stylesheet) {
-        stylesheet.declareStyles(this);
-        return this;
-    }
-
     // TODO: make package private again
     public final void resolve() {
         for (Resolvable resolvable : toBeResolved) {

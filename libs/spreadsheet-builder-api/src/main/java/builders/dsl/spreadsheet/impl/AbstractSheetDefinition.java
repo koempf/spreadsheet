@@ -44,12 +44,6 @@ public abstract class AbstractSheetDefinition implements SheetDefinition, Resolv
         return workbook;
     }
 
-    @Override
-    public final SheetDefinition row() {
-        findOrCreateRow(nextRowNumber++);
-        return this;
-    }
-
     private RowDefinition findOrCreateRow(int zeroBasedRowNumber) {
         AbstractRowDefinition row = rows.get(zeroBasedRowNumber + 1);
 
@@ -81,11 +75,6 @@ public abstract class AbstractSheetDefinition implements SheetDefinition, Resolv
         RowDefinition poiRow = findOrCreateRow(oneBasedRowNumber - 1);
         rowDefinition.accept(poiRow);
         return this;
-    }
-
-    @Override
-    public final SheetDefinition freeze(String column, int row) {
-        return freeze(Utils.parseColumn(column), row);
     }
 
     @Override

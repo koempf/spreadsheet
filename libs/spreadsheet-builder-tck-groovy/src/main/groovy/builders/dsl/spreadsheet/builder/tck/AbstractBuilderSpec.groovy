@@ -28,6 +28,8 @@ import builders.dsl.spreadsheet.query.api.SpreadsheetCriteria
 import builders.dsl.spreadsheet.query.api.SpreadsheetCriteriaResult
 import spock.lang.Specification
 
+import java.awt.Desktop
+
 @SuppressWarnings([
     'NestedBlockDepth',
     'AbcMetric',
@@ -412,29 +414,44 @@ abstract class AbstractBuilderSpec extends Specification {
                 }
             }
         then:
-            !isFillSupported() || filledCells
-            !isFillSupported() || filledCells.size() == 1
+            !fillSupported || filledCells
+            !fillSupported || filledCells.size() == 1
 
         expect:
-            !isVeryHiddenSupported() || matcher.query {
+            !veryHiddenSupported || matcher.query {
                 sheet('Very hidden') {
                     state veryHidden
                 }
             }.sheets.size() == 1
     }
+
     protected abstract SpreadsheetCriteria createCriteria()
     protected abstract SpreadsheetBuilder createSpreadsheetBuilder()
 
     protected int getExpectedAllRowsSize() { 20068 }
-
     protected int getExpectedAllCellSize() { 80134 }
 
     @SuppressWarnings('EmptyMethodInAbstractClass')
     protected void openSpreadsheet() { }
 
     protected boolean isVeryHiddenSupported() { true }
-
     protected boolean isFillSupported() { true }
+
+    /**
+     * Tries to open the file in Word. Only works locally on Mac at the moment. Ignored otherwise.
+     * Main purpose of this method is to quickly open the generated file for manual review.
+     * @param file file to be opened
+     */
+    protected static void open(File file) {
+        try {
+            if (Desktop.desktopSupported && Desktop.desktop.isSupported(Desktop.Action.OPEN)) {
+                Desktop.desktop.open(file)
+                Thread.sleep(10000)
+            }
+        } catch (ignored) {
+            // CI
+        }
+    }
 
     @CompileStatic
     private static void buildSpreadsheet(SpreadsheetBuilder builder, Date today) {

@@ -87,7 +87,7 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
 
     @Override
     protected void openSpreadsheet() {
-        open builder.webLink
+        browse builder.webLink
     }
 
     @Override
@@ -108,7 +108,7 @@ class GoogleBuilderSpec extends AbstractBuilderSpec {
      * Main purpose of this method is to quickly open the generated file for manual review.
      * @param uri uri to be opened
      */
-    private static void open(String uri) {
+    private static void browse(String uri) {
         try {
             if (uri && Desktop.desktopSupported && Desktop.desktop.isSupported(Desktop.Action.BROWSE)) {
                 Desktop.desktop.browse(new URI(uri))
