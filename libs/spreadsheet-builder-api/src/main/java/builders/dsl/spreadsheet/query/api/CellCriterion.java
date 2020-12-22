@@ -20,6 +20,9 @@ package builders.dsl.spreadsheet.query.api;
 import builders.dsl.spreadsheet.api.Cell;
 import builders.dsl.spreadsheet.api.Comment;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -29,6 +32,16 @@ public interface CellCriterion extends Predicate<Cell> {
     CellCriterion date(Date value);
     CellCriterion date(Predicate<Date> predicate);
 
+    CellCriterion localDate(LocalDate value);
+    CellCriterion localDate(Predicate<LocalDate> predicate);
+
+    CellCriterion localDateTime(LocalDateTime value);
+    CellCriterion localDateTime(Predicate<LocalDateTime> predicate);
+
+    CellCriterion localTime(LocalTime value);
+    CellCriterion localTime(Predicate<LocalTime> predicate);
+
+    
     CellCriterion number(Double value);
     CellCriterion number(Predicate<Double> predicate);
 

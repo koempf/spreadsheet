@@ -31,6 +31,9 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFComment;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 class PoiCell implements Cell {
@@ -61,7 +64,20 @@ class PoiCell implements Cell {
             return type.cast(xssfCell.getDateCellValue());
         }
 
+        if (LocalDateTime.class.isAssignableFrom(type)) {
+            return type.cast(xssfCell.getLocalDateTimeCellValue());
+        }
+        
+        if (LocalDate.class.isAssignableFrom(type)) {
+        	final LocalDateTime localDateTime = xssfCell.getLocalDateTimeCellValue();
+            return localDateTime != null ? type.cast(localDateTime.toLocalDate()) : null;
+        }
 
+        if (LocalTime.class.isAssignableFrom(type)) {
+        	final LocalDateTime localDateTime = xssfCell.getLocalDateTimeCellValue();
+            return localDateTime != null ? type.cast(localDateTime.toLocalTime()) : null;
+        }
+        
         if (Boolean.class.isAssignableFrom(type)) {
             return type.cast(xssfCell.getBooleanCellValue());
         }
