@@ -24,7 +24,7 @@ config {
 dependencies {
     compile project(':spreadsheet-builder-api')
 
-    compile 'org.apache.poi:poi-ooxml:4.1.1'
+    compile 'org.apache.poi:poi-ooxml:5.2.2'
     compile 'org.apache.poi:ooxml-schemas:1.4'
 
     testCompile project(':spreadsheet-builder-tck-groovy')
